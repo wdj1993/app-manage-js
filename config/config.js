@@ -2,7 +2,6 @@
 import { defineConfig } from 'umi';
 import defaultSettings from './defaultSettings';
 import proxy from './proxy';
-
 const { REACT_APP_ENV } = process.env;
 export default defineConfig({
   hash: true,
@@ -70,6 +69,12 @@ export default defineConfig({
                   authority: ['admin'],
                 },
               ],
+            },
+            {
+              name: '搜索列表（文章）',
+              icon: 'smile',
+              path: '/listsearcharticles',
+              component: './ListSearchArticles',
             },
             {
               name: 'list.table-list',
