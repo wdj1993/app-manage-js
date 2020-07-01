@@ -31,3 +31,9 @@ export function setAuthority(authority) {
 
   reloadAuthorized();
 }
+export function setToken(token) {
+  localStorage.setItem('token', token);
+}
+export const getToken = () => {
+  return localStorage.getItem("token");
+}

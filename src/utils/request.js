@@ -52,6 +52,6 @@ const errorHandler = error => {
 const request = extend({
   errorHandler,
   // 默认错误处理
-  credentials: 'include', // 默认请求是否带上cookie
+  // credentials: 'include', // 默认请求是否带上cookie,如果带上cookie，需要服务器添加额外配置
 });
 export default request;
