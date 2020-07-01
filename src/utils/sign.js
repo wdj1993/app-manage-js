@@ -5,7 +5,7 @@ const timeStampNow = () => {
   return (Date.parse(new Date().toString()) / 1000).toString();
 }
 
-const sign = (params,useToken = true) => {
+const sign = (params = {},useToken = true) => {
   const data = params;
   data.timestamp = timeStampNow();
   if (useToken) {

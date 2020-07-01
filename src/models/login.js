@@ -13,11 +13,11 @@ const Model = {
   effects: {
     *login({ payload }, { call, put }) {
       const response = yield call(fakeAccountLogin, payload);
-      if(response.code === 200){
+      if (response.code === 200) {
         yield put({
           type: 'changeLoginStatus',
           payload: response,
-        }); 
+        });
         const urlParams = new URL(window.location.href);
         const params = getPageQuery();
         let { redirect } = params;
@@ -38,36 +38,12 @@ const Model = {
         }
 
         history.replace(redirect || '/');
-      }else{
+      } else {
         notification.error({
           description: '登录失败',
           message: response.msg,
         });
       }
-// Login successfully
-
-      // if (response.status === 'ok') {
-      //   const urlParams = new URL(window.location.href);
-      //   const params = getPageQuery();
-      //   let { redirect } = params;
-
-      //   if (redirect) {
-      //     const redirectUrlParams = new URL(redirect);
-
-      //     if (redirectUrlParams.origin === urlParams.origin) {
-      //       redirect = redirect.substr(urlParams.origin.length);
-
-      //       if (redirect.match(/^\/.*#/)) {
-      //         redirect = redirect.substr(redirect.indexOf('#') + 1);
-      //       }
-      //     } else {
-      //       window.location.href = '/';
-      //       return;
-      //     }
-      //   }
-
-      //   history.replace(redirect || '/');
-      // }
     },
 
     logout() {
