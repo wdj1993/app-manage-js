@@ -44,6 +44,8 @@ const user = [
   '谭小仪',
   '仲尼',
 ];
+const isEditor = [1,0];
+const isCompany = [1,0];
 
 function fakeList(count) {
   const list = [];
@@ -90,6 +92,8 @@ function fakeList(count) {
           id: 'member3',
         },
       ],
+      isEditor: isEditor[i % 2],
+      isCompany: isCompany[i % 2]
     });
   }
 

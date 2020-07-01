@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Button, Card, Col, Form, List, Row, Select, Tag, Avatar } from 'antd';
 import { LoadingOutlined, StarOutlined, LikeOutlined, MessageOutlined } from '@ant-design/icons';
 import { connect } from 'umi';
+import moment from 'moment';
 import ArticleListContent from './components/ArticleListContent';
 import StandardFormRow from './components/StandardFormRow';
 import TagSelect from './components/TagSelect';
@@ -252,19 +253,23 @@ const ListSearchArticles = ({ dispatch, listSearchArticles: { list }, loading })
                 <IconText key="like" type="like-o" text={item.like} />,
                 <IconText key="message" type="message" text={item.message} />,
               ]}
-              extra={<div className={styles.listItemExtra} />}
+              // extra={<div className={styles.listItemExtra} />}
             >
               <List.Item.Meta
+                avatar={<Avatar src={item.avatar} size={50} />}
                 title={
-                  <a className={styles.listItemMetaTitle} href={item.href}>
+                  <div className={styles.listUserInfo}>
+                    <a className={styles.listItemMetaTitle} href={item.href}>
                      {item.title}
                   </a>
+                    <em>{moment(item.updatedAt).format('YYYY-MM-DD HH:mm')}</em>
+                  </div>
+
                 }
                 description={
                   <span>
-                    <Tag>Ant Design</Tag>
-                    <Tag>设计语言</Tag>
-                    <Tag>蚂蚁金服</Tag>
+                    <Tag color='blue' visible={item.isEditor===1}>小编认证</Tag>
+                    <Tag color='orange' visible={item.isCompany===1}>企业认证</Tag>
                   </span>
                 }
               />

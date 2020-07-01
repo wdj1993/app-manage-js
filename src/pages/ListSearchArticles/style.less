@@ -11,6 +11,15 @@ a.listItemMetaTitle {
   margin-left: 12px;
 }
 
+.listUserInfo {
+    & > em {
+      margin-left: 16px;
+      color: @disabled-color;
+      font-style: normal;
+      font-size: 14px;
+    }
+}
+
 @media screen and (max-width: @screen-xs) {
   .selfTrigger {
     display: block;

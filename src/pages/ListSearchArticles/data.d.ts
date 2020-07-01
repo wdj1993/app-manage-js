@@ -27,4 +27,6 @@ export interface ListItemDataType {
   content: string;
   members: Member[];
   time:string;
+  isEditor: number;
+  isCompay: number;
 }
