@@ -12,13 +12,14 @@ const { Option } = Select;
 const FormItem = Form.Item;
 const pageSize = 5;
 
-const ListSearchArticles = ({ dispatch, listSearchArticles: { list }, loading }) => {
+const ListSearchArticles = ({ dispatch, listSearchArticles: { list , current}, loading }) => {
   const [form] = Form.useForm();
   useEffect(() => {
     dispatch({
       type: 'listSearchArticles/fetch',
       payload: {
-        count: 5,
+        limit: pageSize,
+        page: current
       },
     });
   }, []);
@@ -33,7 +34,8 @@ const ListSearchArticles = ({ dispatch, listSearchArticles: { list }, loading })
     dispatch({
       type: 'listSearchArticles/appendFetch',
       payload: {
-        count: pageSize,
+        limit: pageSize,
+        page: current
       },
     });
   };
@@ -256,20 +258,20 @@ const ListSearchArticles = ({ dispatch, listSearchArticles: { list }, loading })
               // extra={<div className={styles.listItemExtra} />}
             >
               <List.Item.Meta
-                avatar={<Avatar src={item.avatar} size={50} />}
+                avatar={<Avatar src={item.headimg} size={50} />}
                 title={
                   <div className={styles.listUserInfo}>
                     <a className={styles.listItemMetaTitle} href={item.href}>
-                     {item.title}
+                     {item.nickname}
                   </a>
-                    <em>{moment(item.updatedAt).format('YYYY-MM-DD HH:mm')}</em>
+                    <em>{moment(item.add_time_int*1000).format('YYYY-MM-DD HH:mm')}</em>
                   </div>
 
                 }
                 description={
                   <span>
-                    <Tag color='blue' visible={item.isEditor===1}>小编认证</Tag>
-                    <Tag color='orange' visible={item.isCompany===1}>企业认证</Tag>
+                    <Tag color='blue' visible={item.direct_editingAuth===1}>小编认证</Tag>
+                    <Tag color='orange' visible={item.salerAuth===1}>企业认证</Tag>
                   </span>
                 }
               />

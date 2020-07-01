@@ -29,4 +29,6 @@ export interface ListItemDataType {
   time:string;
   isEditor: number;
   isCompay: number;
+  add_time_int: number;
+  headimg: string;
 }
