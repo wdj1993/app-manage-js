@@ -71,7 +71,7 @@ export default defineConfig({
               ],
             },
             {
-              name: '搜索列表（文章）',
+              name: 'list.circle-list',
               icon: 'smile',
               path: '/listsearcharticles',
               component: './ListSearchArticles',
