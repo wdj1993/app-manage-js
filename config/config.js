@@ -77,6 +77,12 @@ export default defineConfig({
               component: './ListSearchArticles',
             },
             {
+              name: 'list.basic-list',
+              icon: 'smile',
+              path: '/listbasiclist',
+              component: './ListBasicList',
+            },
+            {
               name: 'list.table-list',
               icon: 'table',
               path: '/list',
