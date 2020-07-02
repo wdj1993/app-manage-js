@@ -33,3 +33,10 @@ export async function queryFakeList(params) {
     data: sign(data),
   });
 }
+
+export async function doPraiseCircle(id) {
+  return request(`${api}praise.json`, {
+    method: 'POST',
+    data: sign({c_id:id}),
+  });
+}

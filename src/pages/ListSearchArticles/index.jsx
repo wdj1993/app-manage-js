@@ -1,6 +1,12 @@
 import React, { useEffect } from 'react';
-import { Button, Card, Col, Form, List, Row, Select, Tag, Avatar, Radio } from 'antd';
-import { LoadingOutlined, StarOutlined, LikeOutlined, MessageOutlined } from '@ant-design/icons';
+import { Button, Card, Col, Form, List, Row, Select, Tag, Avatar, Radio, BackTop } from 'antd';
+import {
+  LoadingOutlined,
+  StarOutlined,
+  LikeOutlined,
+  MessageOutlined,
+  LikeTwoTone,
+} from '@ant-design/icons';
 import { connect } from 'umi';
 import moment from 'moment';
 import ArticleListContent from './components/ArticleListContent';
@@ -10,10 +16,10 @@ import styles from './style.less';
 
 const { Option } = Select;
 const FormItem = Form.Item;
-const pageSize = 5;
-let dataType = 'all';
+const pageSize = 10;
+const dataType = 'all';
 
-const ListSearchArticles = ({ dispatch, listSearchArticles: { list , current}, loading }) => {
+const ListSearchArticles = ({ dispatch, listSearchArticles: { list, current }, loading }) => {
   const [form] = Form.useForm();
   useEffect(() => {
     dispatch({
@@ -21,7 +27,7 @@ const ListSearchArticles = ({ dispatch, listSearchArticles: { list , current}, l
       payload: {
         limit: pageSize,
         page: 1,
-        filt: dataType
+        filt: dataType,
       },
     });
   }, []);
@@ -38,7 +44,17 @@ const ListSearchArticles = ({ dispatch, listSearchArticles: { list , current}, l
       payload: {
         limit: pageSize,
         page: current,
-        filt: dataType
+        filt: dataType,
+      },
+    });
+  };
+  const doPraise = (idx) => {
+    dispatch({
+      type: 'listSearchArticles/doPraise',
+      payload: {
+        list,
+        idx,
+        current
       },
     });
   };
@@ -79,19 +95,6 @@ const ListSearchArticles = ({ dispatch, listSearchArticles: { list , current}, l
             {text}
           </span>
         );
-
-      case 'like-o':
-        return (
-          <span>
-            <LikeOutlined
-              style={{
-                marginRight: 8,
-              }}
-            />
-            {text}
-          </span>
-        );
-
       case 'message':
         return (
           <span>
@@ -107,6 +110,29 @@ const ListSearchArticles = ({ dispatch, listSearchArticles: { list , current}, l
       default:
         return null;
     }
+  };
+
+  const IconPraise = ({ text, value, index }) => {
+        return value === 1 ? (
+          <span style={{ color: '#FF5722' }} onClick={() => doPraise(index)}>
+            <LikeTwoTone
+              twoToneColor="#FF5722"
+              style={{
+                marginRight: 8,
+              }}
+            />
+            {text}
+          </span>
+        ) : (
+          <span onClick={() => doPraise(index)}>
+            <LikeOutlined
+              style={{
+                marginRight: 8,
+              }}
+            />
+            {text}
+          </span>
+        );
   };
 
   const formItemLayout = {
@@ -146,8 +172,11 @@ const ListSearchArticles = ({ dispatch, listSearchArticles: { list , current}, l
       </Button>
     </div>
   );
+
   return (
     <>
+      <BackTop />
+
       <Card bordered={false}>
         <Form
           layout="inline"
@@ -156,13 +185,13 @@ const ListSearchArticles = ({ dispatch, listSearchArticles: { list , current}, l
             owner: ['wjh', 'zxx'],
           }}
           onValuesChange={(e) => {
-            dataType = e.category;
+            // dataType = e.category;
             dispatch({
               type: 'listSearchArticles/fetch',
               payload: {
                 limit: pageSize,
                 page: 1,
-                filt: dataType
+                filt: e.category,
               },
             });
           }}
@@ -174,20 +203,14 @@ const ListSearchArticles = ({ dispatch, listSearchArticles: { list , current}, l
               paddingBottom: 11,
             }}
           >
-            <FormItem name="category" >
-              {/* <TagSelect expandable>
-                <TagSelect.Option value="cat1">好友</TagSelect.Option>
-                <TagSelect.Option value="cat2">我的动态</TagSelect.Option>
-                <TagSelect.Option value="cat3">我的点赞</TagSelect.Option>
-                <TagSelect.Option value="cat4">我的评论</TagSelect.Option>
-              </TagSelect> */}
-            <Radio.Group defaultValue={dataType} buttonStyle="solid" value={dataType}>
-              <Radio.Button value="all">所有</Radio.Button>
-              <Radio.Button value="friend">好友</Radio.Button>
-              <Radio.Button value="mime">我的</Radio.Button>
-              <Radio.Button value="myPraise">我点赞的</Radio.Button>
-              <Radio.Button value="myComment">我评论的</Radio.Button>
-            </Radio.Group>
+            <FormItem name="category">
+              <Radio.Group defaultValue="all" buttonStyle="solid">
+                <Radio.Button value="all">所有</Radio.Button>
+                <Radio.Button value="friend">好友</Radio.Button>
+                <Radio.Button value="mime">我的</Radio.Button>
+                <Radio.Button value="myPraise">我点赞的</Radio.Button>
+                <Radio.Button value="myComment">我评论的</Radio.Button>
+              </Radio.Group>
             </FormItem>
           </StandardFormRow>
           {/* <StandardFormRow title="owner" grid>
@@ -252,13 +275,13 @@ const ListSearchArticles = ({ dispatch, listSearchArticles: { list , current}, l
           itemLayout="vertical"
           loadMore={loadMore}
           dataSource={list}
-          renderItem={item => (
+          renderItem={(item,index) => (
             <List.Item
               key={item.id}
               actions={[
                 <IconText key="star" type="star-o" text={item.star} />,
-                <IconText key="like" type="like-o" text={item.like} />,
-                <IconText key="message" type="message" text={item.message} />,
+                <IconText key="message" type="message" text={item.comment} />,
+                <IconPraise key="like" text={item.praise} value={item.is_praise} index = {index}/>,
               ]}
               // extra={<div className={styles.listItemExtra} />}
             >
@@ -267,16 +290,19 @@ const ListSearchArticles = ({ dispatch, listSearchArticles: { list , current}, l
                 title={
                   <div className={styles.listUserInfo}>
                     <a className={styles.listItemMetaTitle} href={item.href}>
-                     {item.nickname}
-                  </a>
-                    <em>{moment(item.add_time_int*1000).format('YYYY-MM-DD HH:mm')}</em>
+                      {item.nickname}
+                    </a>
+                    <em>{moment(item.add_time_int * 1000).format('YYYY-MM-DD HH:mm')}</em>
                   </div>
-
                 }
                 description={
                   <span>
-                    <Tag color='blue' visible={item.direct_editingAuth===1}>小编认证</Tag>
-                    <Tag color='orange' visible={item.salerAuth===1}>企业认证</Tag>
+                    <Tag color="blue" visible={item.direct_editingAuth === 1}>
+                      小编认证
+                    </Tag>
+                    <Tag color="orange" visible={item.salerAuth === 1}>
+                      企业认证
+                    </Tag>
                   </span>
                 }
               />
