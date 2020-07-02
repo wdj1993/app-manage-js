@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Button, Card, Col, Form, List, Row, Select, Tag, Avatar } from 'antd';
+import { Button, Card, Col, Form, List, Row, Select, Tag, Avatar, Radio } from 'antd';
 import { LoadingOutlined, StarOutlined, LikeOutlined, MessageOutlined } from '@ant-design/icons';
 import { connect } from 'umi';
 import moment from 'moment';
@@ -11,6 +11,7 @@ import styles from './style.less';
 const { Option } = Select;
 const FormItem = Form.Item;
 const pageSize = 5;
+let dataType = 'all';
 
 const ListSearchArticles = ({ dispatch, listSearchArticles: { list , current}, loading }) => {
   const [form] = Form.useForm();
@@ -19,7 +20,8 @@ const ListSearchArticles = ({ dispatch, listSearchArticles: { list , current}, l
       type: 'listSearchArticles/fetch',
       payload: {
         limit: pageSize,
-        page: current
+        page: 1,
+        filt: dataType
       },
     });
   }, []);
@@ -35,7 +37,8 @@ const ListSearchArticles = ({ dispatch, listSearchArticles: { list , current}, l
       type: 'listSearchArticles/appendFetch',
       payload: {
         limit: pageSize,
-        page: current
+        page: current,
+        filt: dataType
       },
     });
   };
@@ -152,11 +155,14 @@ const ListSearchArticles = ({ dispatch, listSearchArticles: { list , current}, l
           initialValues={{
             owner: ['wjh', 'zxx'],
           }}
-          onValuesChange={() => {
+          onValuesChange={(e) => {
+            dataType = e.category;
             dispatch({
               type: 'listSearchArticles/fetch',
               payload: {
-                count: 8,
+                limit: pageSize,
+                page: 1,
+                filt: dataType
               },
             });
           }}
@@ -168,24 +174,23 @@ const ListSearchArticles = ({ dispatch, listSearchArticles: { list , current}, l
               paddingBottom: 11,
             }}
           >
-            <FormItem name="category">
-              <TagSelect expandable>
-                <TagSelect.Option value="cat1">类目一</TagSelect.Option>
-                <TagSelect.Option value="cat2">类目二</TagSelect.Option>
-                <TagSelect.Option value="cat3">类目三</TagSelect.Option>
-                <TagSelect.Option value="cat4">类目四</TagSelect.Option>
-                <TagSelect.Option value="cat5">类目五</TagSelect.Option>
-                <TagSelect.Option value="cat6">类目六</TagSelect.Option>
-                <TagSelect.Option value="cat7">类目七</TagSelect.Option>
-                <TagSelect.Option value="cat8">类目八</TagSelect.Option>
-                <TagSelect.Option value="cat9">类目九</TagSelect.Option>
-                <TagSelect.Option value="cat10">类目十</TagSelect.Option>
-                <TagSelect.Option value="cat11">类目十一</TagSelect.Option>
-                <TagSelect.Option value="cat12">类目十二</TagSelect.Option>
-              </TagSelect>
+            <FormItem name="category" >
+              {/* <TagSelect expandable>
+                <TagSelect.Option value="cat1">好友</TagSelect.Option>
+                <TagSelect.Option value="cat2">我的动态</TagSelect.Option>
+                <TagSelect.Option value="cat3">我的点赞</TagSelect.Option>
+                <TagSelect.Option value="cat4">我的评论</TagSelect.Option>
+              </TagSelect> */}
+            <Radio.Group defaultValue={dataType} buttonStyle="solid" value={dataType}>
+              <Radio.Button value="all">所有</Radio.Button>
+              <Radio.Button value="friend">好友</Radio.Button>
+              <Radio.Button value="mime">我的</Radio.Button>
+              <Radio.Button value="myPraise">我点赞的</Radio.Button>
+              <Radio.Button value="myComment">我评论的</Radio.Button>
+            </Radio.Group>
             </FormItem>
           </StandardFormRow>
-          <StandardFormRow title="owner" grid>
+          {/* <StandardFormRow title="owner" grid>
             <FormItem name="owner" noStyle>
               <Select mode="multiple" placeholder="选择 owner">
                 {owners.map(owner => (
@@ -228,7 +233,7 @@ const ListSearchArticles = ({ dispatch, listSearchArticles: { list , current}, l
                 </FormItem>
               </Col>
             </Row>
-          </StandardFormRow>
+          </StandardFormRow> */}
         </Form>
       </Card>
       <Card
