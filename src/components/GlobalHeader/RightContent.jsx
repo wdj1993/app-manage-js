@@ -2,6 +2,7 @@ import { Tooltip, Tag } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import React from 'react';
 import { connect } from 'umi';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import Avatar from './AvatarDropdown';
 import HeaderSearch from '../HeaderSearch';
 import SelectLang from '../SelectLang';
@@ -23,6 +24,7 @@ const GlobalHeaderRight = props => {
 
   return (
     <div className={className}>
+      {/* <PageHeaderWrapper title={false} className={styles.headerBreadcrumb} /> */}
       <HeaderSearch
         className={`${styles.action} ${styles.search}`}
         placeholder="站内搜索"
