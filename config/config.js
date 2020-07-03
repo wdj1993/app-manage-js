@@ -71,6 +71,26 @@ export default defineConfig({
               ],
             },
             {
+              path: '/account',
+              name: 'account',
+              icon: 'crown',              
+              // component: './AccountCenter',
+              routes: [
+                {
+                  path: '/account/center',
+                  name: 'center',
+                  icon: 'smile',
+                  component: './AccountCenter',
+                },
+                {
+                  path: '/account/settings',
+                  name: 'settings',
+                  icon: 'smile',                  
+                  component: './AccountSettings',
+                },
+              ],
+            },
+            {
               name: 'list.circle-list',
               icon: 'smile',
               path: '/listsearcharticles',
@@ -87,6 +107,12 @@ export default defineConfig({
               icon: 'table',
               path: '/list',
               component: './ListTableList',
+            },
+            {
+              name: 'form.step-form',
+              icon: 'smile',
+              path: '/recharge',
+              component: './recharge',
             },
             {
               component: './404',

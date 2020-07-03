@@ -8,10 +8,10 @@
 export default {
   dev: {
     '/api/': {
-      target: 'https://preview.pro.ant.design',
+      target: 'http://api.danews.cc/',
       changeOrigin: true,
       pathRewrite: {
-        '^': '',
+        '^/api/': 'http://api.danews.cc/',
       },
     },
   },
