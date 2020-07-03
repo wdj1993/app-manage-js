@@ -1,4 +1,4 @@
-import { FormattedMessage, formatMessage } from 'umi';
+import { FormattedMessage, formatMessage,connect } from 'umi';
 import React, { Component } from 'react';
 import { List } from 'antd';
 
@@ -16,13 +16,12 @@ const passwordStrength = {
   weak: (
     <span className="weak">
       <FormattedMessage id="accountsettings.security.weak" defaultMessage="Weak" />
-      Weak
     </span>
   ),
 };
 
 class SecurityView extends Component {
-  getData = () => [
+  getData = (currentUser) => [
     {
       title: formatMessage(
         {
@@ -35,7 +34,7 @@ class SecurityView extends Component {
           {formatMessage({
             id: 'accountsettings.security.password-description',
           })}
-          ：{passwordStrength.strong}
+          {passwordStrength.weak}
         </>
       ),
       actions: [
@@ -56,7 +55,7 @@ class SecurityView extends Component {
           id: 'accountsettings.security.phone-description',
         },
         {},
-      )}：138****8293`,
+      )}${currentUser.mobile}`,
       actions: [
         <a key="Modify">
           <FormattedMessage id="accountsettings.security.modify" defaultMessage="Modify" />
@@ -94,7 +93,7 @@ class SecurityView extends Component {
           id: 'accountsettings.security.email-description',
         },
         {},
-      )}：ant***sign.com`,
+      )}${currentUser.email}`,
       actions: [
         <a key="Modify">
           <FormattedMessage id="accountsettings.security.modify" defaultMessage="Modify" />
@@ -123,7 +122,8 @@ class SecurityView extends Component {
   ];
 
   render() {
-    const data = this.getData();
+    const { currentUser } = this.props;
+    const data = this.getData(currentUser);
     return (
       <>
         <List
@@ -140,4 +140,8 @@ class SecurityView extends Component {
   }
 }
 
-export default SecurityView;
+// export default SecurityView;
+
+export default connect(({ accountSettings }) => ({
+  currentUser: accountSettings.currentUser,
+}))(SecurityView);

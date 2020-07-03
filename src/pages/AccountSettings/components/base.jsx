@@ -65,8 +65,8 @@ class BaseView extends Component {
     const { currentUser } = this.props;
 
     if (currentUser) {
-      if (currentUser.avatar) {
-        return currentUser.avatar;
+      if (currentUser.headimg) {
+        return currentUser.headimg;
       }
 
       const url = 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png';
@@ -119,7 +119,7 @@ class BaseView extends Component {
               <Input />
             </Form.Item>
             <Form.Item
-              name="name"
+              name="nickname"
               label={formatMessage({
                 id: 'accountsettings.basic.nickname',
               })}
@@ -138,7 +138,7 @@ class BaseView extends Component {
               <Input />
             </Form.Item>
             <Form.Item
-              name="profile"
+              name="remark"
               label={formatMessage({
                 id: 'accountsettings.basic.profile',
               })}
@@ -242,9 +242,9 @@ class BaseView extends Component {
                     {},
                   ),
                 },
-                {
-                  validator: validatorPhone,
-                },
+                // {
+                //   validator: validatorPhone,
+                // },
               ]}
             >
               <PhoneView />

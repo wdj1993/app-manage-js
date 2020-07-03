@@ -122,7 +122,7 @@ class AccountSettings extends Component {
   render() {
     const { currentUser } = this.props;
 
-    if (!currentUser.userid) {
+    if (!currentUser.id) {
       return '';
     }
 

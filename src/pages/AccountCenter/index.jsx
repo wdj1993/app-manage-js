@@ -1,4 +1,4 @@
-import { PlusOutlined, HomeOutlined, ContactsOutlined, ClusterOutlined } from '@ant-design/icons';
+import { PlusOutlined, HomeOutlined, ContactsOutlined, ClusterOutlined, ManOutlined, WomanOutlined, PhoneOutlined, MailOutlined, MailTwoTone } from '@ant-design/icons';
 import { Avatar, Card, Col, Divider, Input, Row, Tag } from 'antd';
 import React, { Component, useState, useRef } from 'react';
 import { GridContent } from '@ant-design/pro-layout';
@@ -187,20 +187,20 @@ class AccountCenter extends Component {
   renderUserInfo = currentUser => (
     <div className={styles.detail}>
       <p>
-        <ContactsOutlined
+        <PhoneOutlined
           style={{
             marginRight: 8,
           }}
         />
-        {currentUser.title}
+        {currentUser.mobile}
       </p>
       <p>
-        <ClusterOutlined
+        <MailOutlined
           style={{
             marginRight: 8,
           }}
         />
-        {currentUser.group}
+        {currentUser.email}
       </p>
       <p>
         <HomeOutlined
@@ -237,7 +237,7 @@ class AccountCenter extends Component {
     return (
       <GridContent>
         <Row gutter={24}>
-          <Col lg={7} md={24}>
+          <Col xxl={7} xl={10} md={24}>
             <Card
               bordered={false}
               style={{
@@ -248,9 +248,13 @@ class AccountCenter extends Component {
               {!dataLoading && (
                 <div>
                   <div className={styles.avatarHolder}>
-                    <img alt="" src={currentUser.avatar} />
-                    <div className={styles.name}>{currentUser.name}</div>
-                    <div>{currentUser.signature}</div>
+                    <img alt="" src={currentUser.headimg} />
+                    <div className={styles.name}>
+                      {currentUser.nickname} {
+                        currentUser.sex === 1 ?<ManOutlined style={{ color: '#1890ff' }} /> : <WomanOutlined  style={{ color: 'hotpink' }} />
+                      } 
+                    </div>
+                    <div>{currentUser.remark}</div>
                   </div>
                   {this.renderUserInfo(currentUser)}
                   <Divider dashed />
@@ -279,7 +283,7 @@ class AccountCenter extends Component {
               )}
             </Card>
           </Col>
-          <Col lg={17} md={24}>
+          <Col xxl={17} xl={14} md={24}>
             <Card
               className={styles.tabsCard}
               bordered={false}
