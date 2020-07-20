@@ -1,9 +1,9 @@
 import { UploadOutlined } from '@ant-design/icons';
-import { Button, Input, Select, Upload, Form, message } from 'antd';
+import { Button, Input, Select, Upload, Form, message, DatePicker } from 'antd';
 import { connect, FormattedMessage, formatMessage } from 'umi';
 import React, { Component } from 'react';
+import moment from 'moment';
 import GeographicView from './GeographicView';
-import PhoneView from './PhoneView';
 import styles from './BaseView.less';
 
 const { Option } = Select; // 头像组件 方便以后独立，增加裁剪之类的功能
@@ -76,6 +76,30 @@ class BaseView extends Component {
     return '';
   }
 
+  getBirthday() {
+    const { currentUser } = this.props;
+    const birthday = moment(1569204512).format("YYYY-MM-DD HH:mm:ss")
+    return birthday;
+  }
+
+  getPhone() {
+    const { currentUser } = this.props;
+    console.log(currentUser);
+    if (currentUser) {
+      if (currentUser.mobile) {
+        return currentUser.mobile;
+      }
+      const mobile = '';
+      return mobile;
+    }
+
+    return '';
+  }
+
+  onChange = (date, dateString) => {
+    console.log(date, dateString);
+  }
+
   getViewDom = ref => {
     this.view = ref;
   };
@@ -99,7 +123,7 @@ class BaseView extends Component {
             initialValues={currentUser}
             hideRequiredMark
           >
-            <Form.Item
+            {/* <Form.Item
               name="email"
               label={formatMessage({
                 id: 'accountsettings.basic.email',
@@ -117,7 +141,7 @@ class BaseView extends Component {
               ]}
             >
               <Input />
-            </Form.Item>
+            </Form.Item> */}
             <Form.Item
               name="nickname"
               label={formatMessage({
@@ -162,6 +186,14 @@ class BaseView extends Component {
               />
             </Form.Item>
             <Form.Item
+              // name="birthday"
+              label={formatMessage({
+                id: 'accountsettings.basic.birthday',
+              })}              
+            >
+              <DatePicker onChange={this.onChange} defaultValue={moment(1569204512).format("YYYY-MM-DD HH:mm:ss")} />
+            </Form.Item>
+            {/* <Form.Item
               name="country"
               label={formatMessage({
                 id: 'accountsettings.basic.country',
@@ -185,7 +217,7 @@ class BaseView extends Component {
               >
                 <Option value="China">中国</Option>
               </Select>
-            </Form.Item>
+            </Form.Item> */}
             <Form.Item
               name="geographic"
               label={formatMessage({
@@ -208,7 +240,7 @@ class BaseView extends Component {
             >
               <GeographicView />
             </Form.Item>
-            <Form.Item
+            {/* <Form.Item
               name="address"
               label={formatMessage({
                 id: 'accountsettings.basic.address',
@@ -226,28 +258,31 @@ class BaseView extends Component {
               ]}
             >
               <Input />
-            </Form.Item>
+            </Form.Item> */}
             <Form.Item
-              name="phone"
+              name="mobile"
               label={formatMessage({
                 id: 'accountsettings.basic.phone',
               })}
               rules={[
                 {
                   required: true,
-                  message: formatMessage(
-                    {
-                      id: 'accountsettings.basic.phone-message',
-                    },
-                    {},
-                  ),
+                  pattern: /^(?:(?:\+|00)86)?1\d{10}$/,
+                  // message: formatMessage(
+                  //   {
+                  //     id: 'accountsettings.basic.phone-message',
+                  //   },
+                  //   {
+                  //     id: 'accountsettings.basic.phone-validator'
+                  //   },
+                  // ),
                 },
                 // {
                 //   validator: validatorPhone,
                 // },
               ]}
             >
-              <PhoneView />
+              <Input />
             </Form.Item>
             <Form.Item>
               <Button htmlType="submit" type="primary">

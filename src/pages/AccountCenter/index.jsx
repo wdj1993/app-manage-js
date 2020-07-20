@@ -248,7 +248,8 @@ class AccountCenter extends Component {
               {!dataLoading && (
                 <div>
                   <div className={styles.avatarHolder}>
-                    <img alt="" src={currentUser.headimg} />
+                    {/* <img alt="" src={currentUser.headimg} /> */}
+                    <Avatar className={styles.avatar} size={100} shape="square" src={currentUser.headimg} />
                     <div className={styles.name}>
                       {currentUser.nickname} {
                         currentUser.sex === 1 ?<ManOutlined style={{ color: '#1890ff' }} /> : <WomanOutlined  style={{ color: 'hotpink' }} />

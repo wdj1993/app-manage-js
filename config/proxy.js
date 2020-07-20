@@ -11,7 +11,7 @@ export default {
       target: 'http://api.danews.cc/',
       changeOrigin: true,
       pathRewrite: {
-        '^/api/': 'http://api.danews.cc/',
+        '^/api/': '',
       },
     },
   },
