@@ -78,56 +78,115 @@ const TableList = () => {
   const actionRef = useRef();
   const columns = [
     {
-      title: '规则名称',
-      dataIndex: 'name',
-      rules: [
-        {
-          required: true,
-          message: '规则名称为必填项',
-        },
-      ],
-    },
-    {
-      title: '描述',
-      dataIndex: 'desc',
-      valueType: 'textarea',
-    },
-    {
-      title: '服务调用次数',
-      dataIndex: 'callNo',
-      sorter: true,
-      hideInForm: true,
-      renderText: val => `${val} 万`,
-    },
-    {
-      title: '状态',
-      dataIndex: 'status',
+      title: '平台',
+      dataIndex: 'platform',
       hideInForm: true,
       valueEnum: {
-        0: {
-          text: '关闭',
-          status: 'Default',
-        },
         1: {
-          text: '运行中',
-          status: 'Processing',
+          text: '抖音',
         },
         2: {
-          text: '已上线',
-          status: 'Success',
+          text: '微博',
         },
         3: {
-          text: '异常',
-          status: 'Error',
+          text: '微信',
+        },
+        4: {
+          text: '快手',
+        },
+        5: {
+          text: '今日头条',
+        },
+        6: {
+          text: '西瓜视频',
+        },
+        7: {
+          text: '火山小视频',
+        },
+        8: {
+          text: '腾讯微视',
+        },
+        9: {
+          text: '斗鱼',
+        },
+        10: {
+          text: '虎牙',
+        },
+        11: {
+          text: '小红书',
         },
       },
     },
     {
-      title: '上次调度时间',
-      dataIndex: 'updatedAt',
+      title: '昵称',
+      dataIndex: 'account_name',
+      valueType: 'textarea',
+    },
+    {
+      title: '账号ID',
+      dataIndex: 'account_id',
+      valueType: 'textarea',
+      responsive: ['md'],
+      render: (text) => (
+        <div style={{ wordWrap: 'break-word', wordBreak: 'break-word' }}>
+          {text}
+        </div>
+      ),
+    },
+    {
+      title: '单价',
+      dataIndex: 'expect_price',
+      valueType: 'textarea',
+      renderText: val => `${val} 元`,
+    },
+    {
+      title: '频率',
+      dataIndex: 'usage_rate_str',
+      valueType: 'textarea',
+      responsive: ['md'],
+    },
+    {
+      title: '粉丝数',
+      dataIndex: 'fans_num',
       sorter: true,
-      valueType: 'dateTime',
       hideInForm: true,
+      responsive: ['md'],
+    },
+    {
+      title: '作品数',
+      dataIndex: 'issues_num',
+      sorter: true,
+      hideInForm: true,
+      responsive: ['md'],
+    },
+    // {
+    //   title: '状态',
+    //   dataIndex: 'status',
+    //   hideInForm: true,
+    //   valueEnum: {
+    //     0: {
+    //       text: '关闭',
+    //       status: 'Default',
+    //     },
+    //     1: {
+    //       text: '运行中',
+    //       status: 'Processing',
+    //     },
+    //     2: {
+    //       text: '已上线',
+    //       status: 'Success',
+    //     },
+    //     3: {
+    //       text: '异常',
+    //       status: 'Error',
+    //     },
+    //   },
+    // },
+    {
+      title: '添加时间',
+      dataIndex: 'created_at',
+      hideInForm: true,
+      responsive: ['lg'],
       renderFormItem: (item, { defaultRender, ...rest }, form) => {
         const status = form.getFieldValue('status');
 
@@ -146,6 +205,8 @@ const TableList = () => {
       title: '操作',
       dataIndex: 'option',
       valueType: 'option',
+      fixed: 'right',
+      ellipse: true,
       render: (_, record) => (
         <>
           <a
@@ -154,10 +215,10 @@ const TableList = () => {
               setStepFormValues(record);
             }}
           >
-            配置
+            编辑
           </a>
           <Divider type="vertical" />
-          <a href="">订阅警报</a>
+          <a href="">删除</a>
         </>
       ),
     },
@@ -213,6 +274,7 @@ const TableList = () => {
         )}
         request={(params, sorter, filter) => queryRule({ ...params, sorter, filter })}
         columns={columns}
+        scroll={{ y: 800 }}
         rowSelection={{}}
       />
       <CreateForm onCancel={() => handleModalVisible(false)} modalVisible={createModalVisible}>
@@ -253,7 +315,7 @@ const TableList = () => {
             setStepFormValues({});
           }}
           updateModalVisible={updateModalVisible}
-          values={stepFormValues}
+          // values={stepFormValues}
         />
       ) : null}
     </PageHeaderWrapper>

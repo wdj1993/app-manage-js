@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Button, Input, InputNumber, Modal, Select, Steps } from 'antd';
+import { Form, Button, Input, InputNumber, Modal,  Select, Steps } from 'antd';
 
 const FormItem = Form.Item;
 const { Step } = Steps;
@@ -13,15 +13,16 @@ const formLayout = {
   },
 };
 
-const UpdateForm = (props) => {
+const CreateForm = props => {
   const [formVals, setFormVals] = useState({
-    platform: 0,
-    account_id: '',
-    account_name: '',
-    expect_price: '',
-    usage_rate: 0,
-    fans_num: '',
-    issues_num: '',
+    name: props.values.name,
+    desc: props.values.desc,
+    key: props.values.key,
+    target: '0',
+    template: '0',
+    type: '1',
+    time: '',
+    frequency: 'month',
   });
   const [currentStep, setCurrentStep] = useState(0);
   const [form] = Form.useForm();
@@ -52,7 +53,7 @@ const UpdateForm = (props) => {
       return (
         <>
           <FormItem name="frequence" label="使用频率">
-            <Select
+          <Select
               style={{
                 width: '100%',
               }}
@@ -66,22 +67,22 @@ const UpdateForm = (props) => {
               <Option value="6">14小时以上</Option>
             </Select>
           </FormItem>
-          <FormItem name="fans_num" label="粉丝数">
-            <InputNumber
-              placeholder="请输入"
-              style={{
+          <FormItem
+          name="fans_num"
+          label="粉丝数"
+        >
+          <InputNumber placeholder="请输入" style={{
                 width: '100%',
-              }}
-            />
-          </FormItem>
-          <FormItem name="issue_num" label="作品数">
-            <InputNumber
-              placeholder="请输入"
-              style={{
+              }} />
+        </FormItem>
+        <FormItem
+          name="issue_num"
+          label="作品数"
+        >
+          <InputNumber placeholder="请输入" style={{
                 width: '100%',
-              }}
-            />
-          </FormItem>
+              }} />
+        </FormItem>
         </>
       );
     }
@@ -89,13 +90,11 @@ const UpdateForm = (props) => {
     if (currentStep === 2) {
       return (
         <>
-          <FormItem name="expect_price" label="单粉价格">
-            <InputNumber
-              placeholder="请输入"
-              style={{
-                width: '100%',
-              }}
-            />
+          <FormItem
+            name="expect_price"
+            label="单粉价格"
+          >
+            <Input placeholder="请输入" />
           </FormItem>
         </>
       );
@@ -103,34 +102,31 @@ const UpdateForm = (props) => {
 
     return (
       <>
-        <FormItem
-          name="platform"
-          label="账号平台"
-          rules={[
-            {
-              required: true,
-              message: '请选择账户所属平台',
-            },
-          ]}
-        >
-          <Select
-            style={{
-              width: '100%',
-            }}
-            placeholder="请选择平台"
-          >
-            <Option value="1">抖音</Option>
-            <Option value="2">微博</Option>
-            <Option value="3">微信</Option>
-            <Option value="4">快手</Option>
-            <Option value="5">今日头条</Option>
-            <Option value="6">西瓜视频</Option>
-            <Option value="7">火山小视频</Option>
-            <Option value="8">腾讯微视</Option>
-            <Option value="9">斗鱼</Option>
-            <Option value="10">虎牙</Option>
-            <Option value="11">小红书</Option>
-          </Select>
+        <FormItem name="platform" label="账号平台"
+        rules={[
+          {
+            required: true,
+            message: '请选择账户所属平台',
+          },
+        ]}>
+            <Select
+              style={{
+                width: '100%',
+              }}
+              placeholder="请选择平台"
+            >
+              <Option value="1">抖音</Option>
+              <Option value="2">微博</Option>
+              <Option value="3">微信</Option>
+              <Option value="4">快手</Option>
+              <Option value="5">今日头条</Option>
+              <Option value="6">西瓜视频</Option>
+              <Option value="7">火山小视频</Option>
+              <Option value="8">腾讯微视</Option>
+              <Option value="9">斗鱼</Option>
+              <Option value="10">虎牙</Option>
+              <Option value="11">小红书</Option>
+            </Select>
         </FormItem>
         <FormItem
           name="account_name"
@@ -216,7 +212,7 @@ const UpdateForm = (props) => {
         padding: '32px 40px 48px',
       }}
       destroyOnClose
-      title="添加账号"
+      title="规则配置"
       visible={updateModalVisible}
       footer={renderFooter()}
       onCancel={() => handleUpdateModalVisible()}
@@ -236,19 +232,12 @@ const UpdateForm = (props) => {
         {...formLayout}
         form={form}
         initialValues={{
-          // target: formVals.target,
-          // template: formVals.template,
-          // type: formVals.type,
-          // frequency: formVals.frequency,
-          // name: formVals.name,
-          // desc: formVals.desc,
-            //   platform: 0,
-  //   account_id: '',
-  //   account_name: '',
-  //   expect_price: '',
-  //   usage_rate: 0,
-  //   fans_num: '',
-  //   issues_num: '',
+          target: formVals.target,
+          template: formVals.template,
+          type: formVals.type,
+          frequency: formVals.frequency,
+          name: formVals.name,
+          desc: formVals.desc,
         }}
       >
         {renderContent()}
@@ -257,4 +246,4 @@ const UpdateForm = (props) => {
   );
 };
 
-export default UpdateForm;
+export default CreateForm;
