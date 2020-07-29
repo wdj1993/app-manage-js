@@ -86,7 +86,6 @@ const TableList = () => {
   const [updateModalVisible, handleUpdateModalVisible] = useState(false);
   const [stepFormValues, setStepFormValues] = useState({});
   const actionRef = useRef();
-  const [tes] = '1';
   const columns = [
     {
       title: '平台',
@@ -95,7 +94,6 @@ const TableList = () => {
       render: (text) => {
         return  (
         <PlatformTag platform = {text} />
-      // <div>{text}</div>
       )
     },
       // valueEnum: {

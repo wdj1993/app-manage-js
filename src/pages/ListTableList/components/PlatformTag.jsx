@@ -13,68 +13,64 @@ import XiguaSvg from '@/assets/platforms/xigua.svg';
 
 const PlatformTag = (props) => {
   const { platform } = props;
-  const renderIcon = () => {
-    let src;
-    let title;
-    switch (platform) {
-      case 1:
-        src = DouyinSvg;
-        title = '抖音';
-        break;
-      case 2:
-        src = WeiboSvg;
-        title = '微博';
-        break;
-      case 3:
-        src = WeixinSvg;
-        title = '微信';
-        break;
-      case 4:
-        src = KuaishouSvg;
-        title = '快手';
-        break;
-      case 5:
-        src = ToutiaoSvg;
-        title = '头条';
-        break;
-      case 6:
-        src = XiguaSvg;
-        title = '西瓜';
-        break;
-      case 7:
-        src = HuoshanSvg;
-        title = '火山小视频';
-        break;
-      case 8:
-        src = WeishiSvg;
-        title = '腾讯微视';
-        break;
-      case 9:
-        src = DouyuSvg;
-        title = '斗鱼';
-        break;
-      case 10:
-        src = HuyaSvg;
-        title = '虎牙';
-        break;
-      case 11:
-        src = XiaoshongshuSvg;
-        title = '小红书';
-        break;
-      default:
-        break;
-    }
+  const plats = {
+      1: {
+        text: '抖音',
+        icon: DouyinSvg,
+      },
+      2: {
+        text: '微博',
+        icon: WeiboSvg
+      },
+      3: {
+        text: '微信',
+        icon: WeixinSvg
+      },
+      4: {
+        text: '快手',
+        icon: KuaishouSvg
+      },
+      5: {
+        text: '今日头条',
+        icon: ToutiaoSvg
+      },
+      6: {
+        text: '西瓜视频',
+        icon: XiguaSvg
+      },
+      7: {
+        text: '火山小视频',
+        icon: HuoshanSvg
+      },
+      8: {
+        text: '腾讯微视',
+        icon: WeishiSvg
+      },
+      9: {
+        text: '斗鱼',
+        icon: DouyuSvg
+      },
+      10: {
+        text: '虎牙',
+        icon: HuyaSvg
+      },
+      11: {
+        text: '小红书',
+        icon: XiaoshongshuSvg
+      },
+    };
 
+  const renderIcon = () => {
     return (
       <>
         <img
-          src={src}
+          src= {plats[platform].icon}
           style={{
             width: 25,
             height: 25,
           }}
-          alt={title}
-          title={title}
+          alt={plats[platform].text}
+          title={plats[platform].text}
         />
       </>
     );
