@@ -66,6 +66,7 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-helmet-async": "^1.0.4",
+    "react-redux": "^7.2.1",
     "react-router": "^4.3.1",
     "umi": "^3.1.2",
     "umi-request": "^1.0.8",

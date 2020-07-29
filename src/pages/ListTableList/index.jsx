@@ -1,17 +1,18 @@
 import { DownOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Divider, Dropdown, Menu, message, Input } from 'antd';
+import { Button, Divider, Dropdown, Menu, message, Input, Avatar } from 'antd';
 import React, { useState, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
 import CreateForm from './components/CreateForm';
 import UpdateForm from './components/UpdateForm';
 import { queryRule, updateRule, addRule, removeRule } from './service';
+import PlatformTag from './components/PlatformTag';
 /**
  * 添加节点
  * @param fields
  */
 
-const handleAdd = async fields => {
+const handleAdd = async (fields) => {
   const hide = message.loading('正在添加');
 
   try {
@@ -30,7 +31,7 @@ const handleAdd = async fields => {
  * @param fields
  */
 
-const handleUpdate = async fields => {
+const handleUpdate = async (fields) => {
   const hide = message.loading('正在配置');
 
   try {
@@ -53,13 +54,13 @@ const handleUpdate = async fields => {
  * @param selectedRows
  */
 
-const handleRemove = async selectedRows => {
+const handleRemove = async (selectedRows) => {
   const hide = message.loading('正在删除');
   if (!selectedRows) return true;
 
   try {
     await removeRule({
-      key: selectedRows.map(row => row.key),
+      key: selectedRows.map((row) => row.key),
     });
     hide();
     message.success('删除成功，即将刷新');
@@ -71,51 +72,67 @@ const handleRemove = async selectedRows => {
   }
 };
 
+// const PlarformTag = ({ platform }) => {
+
+//   return (
+//     <div>
+//       <Avatar shape="square" size="small" src={ require(`../../assets/platforms/icon-l-${platform}.png`) } />
+//     </div>
+//   );
+// };
+
 const TableList = () => {
   const [createModalVisible, handleModalVisible] = useState(false);
   const [updateModalVisible, handleUpdateModalVisible] = useState(false);
   const [stepFormValues, setStepFormValues] = useState({});
   const actionRef = useRef();
+  const [tes] = '1';
   const columns = [
     {
       title: '平台',
       dataIndex: 'platform',
       hideInForm: true,
-      valueEnum: {
-        1: {
-          text: '抖音',
-        },
-        2: {
-          text: '微博',
-        },
-        3: {
-          text: '微信',
-        },
-        4: {
-          text: '快手',
-        },
-        5: {
-          text: '今日头条',
-        },
-        6: {
-          text: '西瓜视频',
-        },
-        7: {
-          text: '火山小视频',
-        },
-        8: {
-          text: '腾讯微视',
-        },
-        9: {
-          text: '斗鱼',
-        },
-        10: {
-          text: '虎牙',
-        },
-        11: {
-          text: '小红书',
-        },
-      },
+      render: (text) => {
+        return  (
+        <PlatformTag platform = {text} />
+      // <div>{text}</div>
+      )
+    },
+      // valueEnum: {
+      //   1: {
+      //     text: '抖音',
+      //   },
+      //   2: {
+      //     text: '微博',
+      //   },
+      //   3: {
+      //     text: '微信',
+      //   },
+      //   4: {
+      //     text: '快手',
+      //   },
+      //   5: {
+      //     text: '今日头条',
+      //   },
+      //   6: {
+      //     text: '西瓜视频',
+      //   },
+      //   7: {
+      //     text: '火山小视频',
+      //   },
+      //   8: {
+      //     text: '腾讯微视',
+      //   },
+      //   9: {
+      //     text: '斗鱼',
+      //   },
+      //   10: {
+      //     text: '虎牙',
+      //   },
+      //   11: {
+      //     text: '小红书',
+      //   },
+      // },
     },
     {
       title: '昵称',
@@ -128,16 +145,14 @@ const TableList = () => {
       valueType: 'textarea',
       responsive: ['md'],
       render: (text) => (
-        <div style={{ wordWrap: 'break-word', wordBreak: 'break-word' }}>
-          {text}
-        </div>
+        <div style={{ wordWrap: 'break-word', wordBreak: 'break-word' }}>{text}</div>
       ),
     },
     {
       title: '单价',
       dataIndex: 'expect_price',
       valueType: 'textarea',
-      renderText: val => `${val} 元`,
+      renderText: (val) => `${val} 元`,
     },
     {
       title: '频率',
@@ -218,7 +233,15 @@ const TableList = () => {
             编辑
           </a>
           <Divider type="vertical" />
-          <a href="">删除</a>
+          <a
+            onClick={() => {
+              handleUpdateModalVisible(true);
+              setStepFormValues(record);
+              console.log(record);
+            }}
+          >
+            删除
+          </a>
         </>
       ),
     },
@@ -228,7 +251,7 @@ const TableList = () => {
       <ProTable
         headerTitle="查询表格"
         actionRef={actionRef}
-        rowKey="key"
+        rowKey="id"
         toolBarRender={(action, { selectedRows }) => [
           <Button type="primary" onClick={() => handleModalVisible(true)}>
             <PlusOutlined /> 新建
@@ -237,7 +260,7 @@ const TableList = () => {
             <Dropdown
               overlay={
                 <Menu
-                  onClick={async e => {
+                  onClick={async (e) => {
                     if (e.key === 'remove') {
                       await handleRemove(selectedRows);
                       action.reload();
@@ -246,7 +269,6 @@ const TableList = () => {
                   selectedKeys={[]}
                 >
                   <Menu.Item key="remove">批量删除</Menu.Item>
-                  <Menu.Item key="approval">批量审批</Menu.Item>
                 </Menu>
               }
             >
@@ -267,19 +289,19 @@ const TableList = () => {
               {selectedRowKeys.length}
             </a>{' '}
             项&nbsp;&nbsp;
-            <span>
+            {/* <span>
               服务调用次数总计 {selectedRows.reduce((pre, item) => pre + item.callNo, 0)} 万
-            </span>
+            </span> */}
           </div>
         )}
         request={(params, sorter, filter) => queryRule({ ...params, sorter, filter })}
         columns={columns}
-        scroll={{ y: 800 }}
+        // scroll={{ y: 800 }}
         rowSelection={{}}
       />
       <CreateForm onCancel={() => handleModalVisible(false)} modalVisible={createModalVisible}>
         <ProTable
-          onSubmit={async value => {
+          onSubmit={async (value) => {
             const success = await handleAdd(value);
 
             if (success) {
@@ -290,7 +312,7 @@ const TableList = () => {
               }
             }
           }}
-          rowKey="key"
+          rowKey="id"
           type="form"
           columns={columns}
           rowSelection={{}}
@@ -298,7 +320,7 @@ const TableList = () => {
       </CreateForm>
       {stepFormValues && Object.keys(stepFormValues).length ? (
         <UpdateForm
-          onSubmit={async value => {
+          onSubmit={async (value) => {
             const success = await handleUpdate(value);
 
             if (success) {
