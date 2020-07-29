@@ -1,5 +1,5 @@
 import { DownOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Divider, Dropdown, Menu, message, Input, Avatar } from 'antd';
+import { Button, Divider, Dropdown, Menu, message, Input } from 'antd';
 import React, { useState, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
@@ -72,15 +72,6 @@ const handleRemove = async (selectedRows) => {
   }
 };
 
-// const PlarformTag = ({ platform }) => {
-
-//   return (
-//     <div>
-//       <Avatar shape="square" size="small" src={ require(`../../assets/platforms/icon-l-${platform}.png`) } />
-//     </div>
-//   );
-// };
-
 const TableList = () => {
   const [createModalVisible, handleModalVisible] = useState(false);
   const [updateModalVisible, handleUpdateModalVisible] = useState(false);
@@ -89,6 +80,7 @@ const TableList = () => {
   const columns = [
     {
       title: '平台',
+      align: 'center',
       dataIndex: 'platform',
       hideInForm: true,
       render: (text) => {
@@ -136,6 +128,7 @@ const TableList = () => {
       title: '昵称',
       dataIndex: 'account_name',
       valueType: 'textarea',
+      align: 'center'
     },
     {
       title: '账号ID',
@@ -150,12 +143,14 @@ const TableList = () => {
       title: '单价',
       dataIndex: 'expect_price',
       valueType: 'textarea',
+      align: 'center',
       renderText: (val) => `${val} 元`,
     },
     {
       title: '频率',
       dataIndex: 'usage_rate_str',
       valueType: 'textarea',
+      align: 'center',
       responsive: ['md'],
     },
     {
@@ -163,6 +158,7 @@ const TableList = () => {
       dataIndex: 'fans_num',
       sorter: true,
       hideInForm: true,
+      align: 'center',
       responsive: ['md'],
     },
     {
@@ -170,35 +166,14 @@ const TableList = () => {
       dataIndex: 'issues_num',
       sorter: true,
       hideInForm: true,
+      align: 'center',
       responsive: ['md'],
     },
-    // {
-    //   title: '状态',
-    //   dataIndex: 'status',
-    //   hideInForm: true,
-    //   valueEnum: {
-    //     0: {
-    //       text: '关闭',
-    //       status: 'Default',
-    //     },
-    //     1: {
-    //       text: '运行中',
-    //       status: 'Processing',
-    //     },
-    //     2: {
-    //       text: '已上线',
-    //       status: 'Success',
-    //     },
-    //     3: {
-    //       text: '异常',
-    //       status: 'Error',
-    //     },
-    //   },
-    // },
     {
       title: '添加时间',
       dataIndex: 'created_at',
       hideInForm: true,
+      align: 'center',
       responsive: ['lg'],
       renderFormItem: (item, { defaultRender, ...rest }, form) => {
         const status = form.getFieldValue('status');
@@ -219,6 +194,7 @@ const TableList = () => {
       dataIndex: 'option',
       valueType: 'option',
       fixed: 'right',
+      align: 'center',
       ellipse: true,
       render: (_, record) => (
         <>
@@ -235,7 +211,6 @@ const TableList = () => {
             onClick={() => {
               handleUpdateModalVisible(true);
               setStepFormValues(record);
-              console.log(record);
             }}
           >
             删除
@@ -250,6 +225,7 @@ const TableList = () => {
         headerTitle="查询表格"
         actionRef={actionRef}
         rowKey="id"
+        bordered
         toolBarRender={(action, { selectedRows }) => [
           <Button type="primary" onClick={() => handleModalVisible(true)}>
             <PlusOutlined /> 新建
