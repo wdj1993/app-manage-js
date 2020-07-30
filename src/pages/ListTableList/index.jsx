@@ -7,6 +7,7 @@ import CreateForm from './components/CreateForm';
 import UpdateForm from './components/UpdateForm';
 import { queryRule, updateRule, addRule, removeRule } from './service';
 import PlatformTag from './components/PlatformTag';
+import NewForm from './components/NewForm';
 /**
  * 添加节点
  * @param fields
@@ -32,20 +33,25 @@ const handleAdd = async (fields) => {
  */
 
 const handleUpdate = async (fields) => {
-  const hide = message.loading('正在配置');
+  const hide = message.loading('提交中');
 
   try {
     await updateRule({
-      name: fields.name,
-      desc: fields.desc,
-      key: fields.key,
+      id: fields.id,
+      platform: fields.platform,
+      account_name: fields.account_name,
+      account_id: fields.account_id,
+      expect_price: fields.expect_price,
+      usage_rate: fields.usage_rate,
+      fans_num: fields.fans_num,
+      issues_num: fields.issues_num   
     });
     hide();
-    message.success('配置成功');
+    message.success('账号修改成功');
     return true;
   } catch (error) {
     hide();
-    message.error('配置失败请重试！');
+    message.error('账号修改失败请重试！');
     return false;
   }
 };
@@ -82,58 +88,54 @@ const TableList = () => {
       title: '平台',
       align: 'center',
       dataIndex: 'platform',
-      hideInForm: true,
-      render: (text) => {
-        return  (
-        <PlatformTag platform = {text} />
-      )
-    },
-      // valueEnum: {
-      //   1: {
-      //     text: '抖音',
-      //   },
-      //   2: {
-      //     text: '微博',
-      //   },
-      //   3: {
-      //     text: '微信',
-      //   },
-      //   4: {
-      //     text: '快手',
-      //   },
-      //   5: {
-      //     text: '今日头条',
-      //   },
-      //   6: {
-      //     text: '西瓜视频',
-      //   },
-      //   7: {
-      //     text: '火山小视频',
-      //   },
-      //   8: {
-      //     text: '腾讯微视',
-      //   },
-      //   9: {
-      //     text: '斗鱼',
-      //   },
-      //   10: {
-      //     text: '虎牙',
-      //   },
-      //   11: {
-      //     text: '小红书',
-      //   },
-      // },
+      render: (_, record) => {
+        return <PlatformTag platform={record.platform} />;
+      },
+      filters: false,
+      valueEnum: {
+        1: {
+          text: '抖音',
+        },
+        2: {
+          text: '微博',
+        },
+        3: {
+          text: '微信',
+        },
+        4: {
+          text: '快手',
+        },
+        5: {
+          text: '今日头条',
+        },
+        6: {
+          text: '西瓜视频',
+        },
+        7: {
+          text: '火山小视频',
+        },
+        8: {
+          text: '腾讯微视',
+        },
+        9: {
+          text: '斗鱼',
+        },
+        10: {
+          text: '虎牙',
+        },
+        11: {
+          text: '小红书',
+        },
+      },
     },
     {
       title: '昵称',
       dataIndex: 'account_name',
-      valueType: 'textarea',
-      align: 'center'
+      align: 'center',
     },
     {
       title: '账号ID',
       dataIndex: 'account_id',
-      valueType: 'textarea',
       responsive: ['md'],
       render: (text) => (
         <div style={{ wordWrap: 'break-word', wordBreak: 'break-word' }}>{text}</div>
@@ -142,52 +144,61 @@ const TableList = () => {
     {
       title: '单价',
       dataIndex: 'expect_price',
-      valueType: 'textarea',
       align: 'center',
-      renderText: (val) => `${val} 元`,
+      hideInSearch: true,
+      valueType: 'money',
     },
     {
       title: '频率',
-      dataIndex: 'usage_rate_str',
-      valueType: 'textarea',
+      dataIndex: 'usage_rate',
       align: 'center',
+      hideInSearch: true,
+      filters: false,
       responsive: ['md'],
+      valueEnum: {
+        1: {
+          text: '2小时以下',
+        },
+        2: {
+          text: '2-5小时',
+        },
+        3: {
+          text: '5-8小时',
+        },
+        4: {
+          text: '8-11小时',
+        },
+        5: {
+          text: '11-14小时',
+        },
+        6: {
+          text: '14小时以上',
+        },
+      },
     },
     {
       title: '粉丝数',
       dataIndex: 'fans_num',
-      sorter: true,
-      hideInForm: true,
       align: 'center',
+      hideInSearch: true,
+      valueType: 'digit',
       responsive: ['md'],
     },
     {
       title: '作品数',
       dataIndex: 'issues_num',
-      sorter: true,
-      hideInForm: true,
       align: 'center',
+      valueType: 'digit',
+      hideInSearch: true,
       responsive: ['md'],
     },
     {
       title: '添加时间',
       dataIndex: 'created_at',
       hideInForm: true,
+      hideInSearch: true,
       align: 'center',
       responsive: ['lg'],
-      renderFormItem: (item, { defaultRender, ...rest }, form) => {
-        const status = form.getFieldValue('status');
-
-        if (`${status}` === '0') {
-          return false;
-        }
-
-        if (`${status}` === '3') {
-          return <Input {...rest} placeholder="请输入异常原因！" />;
-        }
-
-        return defaultRender(item);
-      },
     },
     {
       title: '操作',
@@ -195,13 +206,13 @@ const TableList = () => {
       valueType: 'option',
       fixed: 'right',
       align: 'center',
-      ellipse: true,
       render: (_, record) => (
         <>
           <a
             onClick={() => {
-              handleUpdateModalVisible(true);
               setStepFormValues(record);
+              handleModalVisible(true);
+              console.log(record)
             }}
           >
             编辑
@@ -209,7 +220,7 @@ const TableList = () => {
           <Divider type="vertical" />
           <a
             onClick={() => {
-              handleUpdateModalVisible(true);
+              // handleUpdateModalVisible(true);
               setStepFormValues(record);
             }}
           >
@@ -229,6 +240,14 @@ const TableList = () => {
         toolBarRender={(action, { selectedRows }) => [
           <Button type="primary" onClick={() => handleModalVisible(true)}>
             <PlusOutlined /> 新建
+          </Button>,
+          <Button
+            type="primary"
+            onClick={() => {
+              handleUpdateModalVisible(true);
+            }}
+          >
+            <PlusOutlined /> NEW
           </Button>,
           selectedRows && selectedRows.length > 0 && (
             <Dropdown
@@ -270,50 +289,49 @@ const TableList = () => {
         )}
         request={(params, sorter, filter) => queryRule({ ...params, sorter, filter })}
         columns={columns}
-        // scroll={{ y: 800 }}
         rowSelection={{}}
       />
-      <CreateForm onCancel={() => handleModalVisible(false)} modalVisible={createModalVisible}>
-        <ProTable
+      {stepFormValues && Object.keys(stepFormValues).length ? (
+        <NewForm
           onSubmit={async (value) => {
-            const success = await handleAdd(value);
-
+            console.log(value);
+            const success = await handleUpdate(value);
             if (success) {
               handleModalVisible(false);
-
-              if (actionRef.current) {
-                actionRef.current.reload();
-              }
-            }
-          }}
-          rowKey="id"
-          type="form"
-          columns={columns}
-          rowSelection={{}}
-        />
-      </CreateForm>
-      {stepFormValues && Object.keys(stepFormValues).length ? (
-        <UpdateForm
-          onSubmit={async (value) => {
-            const success = await handleUpdate(value);
-
-            if (success) {
-              handleUpdateModalVisible(false);
               setStepFormValues({});
-
               if (actionRef.current) {
                 actionRef.current.reload();
               }
             }
           }}
           onCancel={() => {
-            handleUpdateModalVisible(false);
+            handleModalVisible(false);
             setStepFormValues({});
           }}
-          updateModalVisible={updateModalVisible}
-          // values={stepFormValues}
+          modalVisible={createModalVisible}
+          values={stepFormValues}
         />
       ) : null}
+      <UpdateForm
+        onSubmit={async (value) => {
+          const success = await handleUpdate(value);
+
+          if (success) {
+            handleUpdateModalVisible(false);
+            setStepFormValues({});
+
+            if (actionRef.current) {
+              actionRef.current.reload();
+            }
+          }
+        }}
+        onCancel={() => {
+          handleUpdateModalVisible(false);
+          setStepFormValues({});
+        }}
+        updateModalVisible={updateModalVisible}
+        // values={stepFormValues}
+      />
     </PageHeaderWrapper>
   );
 };

@@ -89,7 +89,16 @@ const UpdateForm = (props) => {
     if (currentStep === 2) {
       return (
         <>
-          <FormItem name="expect_price" label="单粉价格">
+          <FormItem 
+            name="expect_price" 
+            label="单粉价格" 
+            rules={[
+              {
+                required: true,
+                message: '请输入单粉价格',
+              },
+            ]}
+          >
             <InputNumber
               placeholder="请输入"
               style={{

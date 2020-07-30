@@ -20,8 +20,8 @@ export async function addRule(params) {
   });
 }
 export async function updateRule(params) {
-  return request('/api/rule', {
+  return request('/api/editAccount.json', {
     method: 'POST',
-    data: { ...params, method: 'update' },
+    data: sign(params)
   });
 }
