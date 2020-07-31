@@ -73,7 +73,7 @@ export default defineConfig({
             {
               path: '/account',
               name: 'account',
-              icon: 'crown',              
+              icon: 'crown',
               // component: './AccountCenter',
               routes: [
                 {
@@ -85,7 +85,7 @@ export default defineConfig({
                 {
                   path: '/account/settings',
                   name: 'settings',
-                  icon: 'smile',                  
+                  icon: 'smile',
                   component: './AccountSettings',
                 },
               ],
@@ -113,6 +113,12 @@ export default defineConfig({
               icon: 'smile',
               path: '/recharge',
               component: './recharge',
+            },
+            {
+              name: 'dashboard.workplace',
+              icon: 'smile',
+              path: '/home',
+              component: './Home',
             },
             {
               component: './404',
