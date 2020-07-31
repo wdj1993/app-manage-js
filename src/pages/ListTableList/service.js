@@ -8,15 +8,15 @@ export async function queryRule(params) {
   });
 }
 export async function removeRule(params) {
-  return request('/api/rule', {
+  return request('/api/delAccount.json', {
     method: 'POST',
-    data: { ...params, method: 'delete' },
+    data: sign(params)
   });
 }
 export async function addRule(params) {
-  return request('/api/rule', {
+  return request('/api/addAccount.json', {
     method: 'POST',
-    data: { ...params, method: 'post' },
+    data: sign(params)
   });
 }
 export async function updateRule(params) {

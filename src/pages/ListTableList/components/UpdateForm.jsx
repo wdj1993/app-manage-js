@@ -14,15 +14,6 @@ const formLayout = {
 };
 
 const UpdateForm = (props) => {
-  const [formVals, setFormVals] = useState({
-    platform: 0,
-    account_id: '',
-    account_name: '',
-    expect_price: '',
-    usage_rate: 0,
-    fans_num: '',
-    issues_num: '',
-  });
   const [currentStep, setCurrentStep] = useState(0);
   const [form] = Form.useForm();
   const {
@@ -31,6 +22,17 @@ const UpdateForm = (props) => {
     updateModalVisible,
     values,
   } = props;
+  const [formVals, setFormVals] = useState({
+    platform: values.platform,
+    account_name: values.account_name,
+    account_id: values.account_id,
+    expect_price: values.expect_price,
+    usage_rate: values.usage_rate,
+    fans_num: values.fans_num,
+    issues_num: values.issues_num    
+  });
+
+
 
   const forward = () => setCurrentStep(currentStep + 1);
 
@@ -39,31 +41,38 @@ const UpdateForm = (props) => {
   const handleNext = async () => {
     const fieldsValue = await form.validateFields();
     setFormVals({ ...formVals, ...fieldsValue });
-
     if (currentStep < 2) {
       forward();
     } else {
       handleUpdate({ ...formVals, ...fieldsValue });
     }
+    console.log('========',formVals);
   };
+
+  const handleReset = () => {
+    handleUpdateModalVisible(false, values);
+    setCurrentStep(0);
+    // setFormVals({});
+    // form.resetFields();
+  }
 
   const renderContent = () => {
     if (currentStep === 1) {
       return (
         <>
-          <FormItem name="frequence" label="使用频率">
+          <FormItem name="usage_rate" label="使用频率">
             <Select
               style={{
                 width: '100%',
               }}
               placeholder="请选择账号使用频率"
             >
-              <Option value="1">2小时以下</Option>
-              <Option value="2">2-5小时</Option>
-              <Option value="3">5-8小时</Option>
-              <Option value="4">8-11小时</Option>
-              <Option value="5">11-14小时</Option>
-              <Option value="6">14小时以上</Option>
+              <Option value={1}>2小时以下</Option>
+              <Option value={2}>2-5小时</Option>
+              <Option value={3}>5-8小时</Option>
+              <Option value={4}>8-11小时</Option>
+              <Option value={5}>11-14小时</Option>
+              <Option value={6}>14小时以上</Option>
             </Select>
           </FormItem>
           <FormItem name="fans_num" label="粉丝数">
@@ -74,7 +83,7 @@ const UpdateForm = (props) => {
               }}
             />
           </FormItem>
-          <FormItem name="issue_num" label="作品数">
+          <FormItem name="issues_num" label="作品数">
             <InputNumber
               placeholder="请输入"
               style={{
@@ -128,17 +137,17 @@ const UpdateForm = (props) => {
             }}
             placeholder="请选择平台"
           >
-            <Option value="1">抖音</Option>
-            <Option value="2">微博</Option>
-            <Option value="3">微信</Option>
-            <Option value="4">快手</Option>
-            <Option value="5">今日头条</Option>
-            <Option value="6">西瓜视频</Option>
-            <Option value="7">火山小视频</Option>
-            <Option value="8">腾讯微视</Option>
-            <Option value="9">斗鱼</Option>
-            <Option value="10">虎牙</Option>
-            <Option value="11">小红书</Option>
+            <Option value={1}>抖音</Option>
+            <Option value={2}>微博</Option>
+            <Option value={3}>微信</Option>
+            <Option value={4}>快手</Option>
+            <Option value={5}>今日头条</Option>
+            <Option value={6}>西瓜视频</Option>
+            <Option value={7}>火山小视频</Option>
+            <Option value={8}>腾讯微视</Option>
+            <Option value={9}>斗鱼</Option>
+            <Option value={10}>虎牙</Option>
+            <Option value={11}>小红书</Option>
           </Select>
         </FormItem>
         <FormItem
@@ -181,7 +190,7 @@ const UpdateForm = (props) => {
           >
             上一步
           </Button>
-          <Button onClick={() => handleUpdateModalVisible(false, values)}>取消</Button>
+          <Button onClick={() => handleReset()}>取消</Button>
           <Button type="primary" onClick={() => handleNext()}>
             下一步
           </Button>
@@ -200,7 +209,7 @@ const UpdateForm = (props) => {
           >
             上一步
           </Button>
-          <Button onClick={() => handleUpdateModalVisible(false, values)}>取消</Button>
+          <Button onClick={() => handleReset()}>取消</Button>
           <Button type="primary" onClick={() => handleNext()}>
             完成
           </Button>
@@ -210,7 +219,7 @@ const UpdateForm = (props) => {
 
     return (
       <>
-        <Button onClick={() => handleUpdateModalVisible(false, values)}>取消</Button>
+        <Button onClick={() => handleReset()}>取消</Button>
         <Button type="primary" onClick={() => handleNext()}>
           下一步
         </Button>
@@ -228,7 +237,7 @@ const UpdateForm = (props) => {
       title="添加账号"
       visible={updateModalVisible}
       footer={renderFooter()}
-      onCancel={() => handleUpdateModalVisible()}
+      onCancel={() => handleReset()}
     >
       <Steps
         style={{
@@ -244,21 +253,7 @@ const UpdateForm = (props) => {
       <Form
         {...formLayout}
         form={form}
-        initialValues={{
-          // target: formVals.target,
-          // template: formVals.template,
-          // type: formVals.type,
-          // frequency: formVals.frequency,
-          // name: formVals.name,
-          // desc: formVals.desc,
-            //   platform: 0,
-  //   account_id: '',
-  //   account_name: '',
-  //   expect_price: '',
-  //   usage_rate: 0,
-  //   fans_num: '',
-  //   issues_num: '',
-        }}
+        initialValues={formVals}
       >
         {renderContent()}
       </Form>

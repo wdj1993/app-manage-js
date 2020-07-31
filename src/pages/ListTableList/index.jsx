@@ -1,5 +1,5 @@
-import { DownOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Divider, Dropdown, Menu, message, Input } from 'antd';
+import { DownOutlined, PlusOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { Button, Divider, Dropdown, Menu, message, Input, Modal } from 'antd';
 import React, { useState, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
@@ -36,16 +36,7 @@ const handleUpdate = async (fields) => {
   const hide = message.loading('提交中');
 
   try {
-    await updateRule({
-      id: fields.id,
-      platform: fields.platform,
-      account_name: fields.account_name,
-      account_id: fields.account_id,
-      expect_price: fields.expect_price,
-      usage_rate: fields.usage_rate,
-      fans_num: fields.fans_num,
-      issues_num: fields.issues_num   
-    });
+    await updateRule({ ...fields });
     hide();
     message.success('账号修改成功');
     return true;
@@ -60,13 +51,29 @@ const handleUpdate = async (fields) => {
  * @param selectedRows
  */
 
-const handleRemove = async (selectedRows) => {
-  const hide = message.loading('正在删除');
-  if (!selectedRows) return true;
+// const handleRemove = async (selectedRows) => {
+//   const hide = message.loading('正在删除');
+//   if (!selectedRows) return true;
 
+//   try {
+//     await removeRule({
+//       id: selectedRows.map((row) => row.id),
+//     });
+//     hide();
+//     message.success('删除成功，即将刷新');
+//     return true;
+//   } catch (error) {
+//     hide();
+//     message.error('删除失败，请重试');
+//     return false;
+//   }
+// };
+const handleRemove = async (id) => {
+  const hide = message.loading('正在删除');
+  if (!id) return true;
   try {
     await removeRule({
-      key: selectedRows.map((row) => row.key),
+      id,
     });
     hide();
     message.success('删除成功，即将刷新');
@@ -82,6 +89,7 @@ const TableList = () => {
   const [createModalVisible, handleModalVisible] = useState(false);
   const [updateModalVisible, handleUpdateModalVisible] = useState(false);
   const [stepFormValues, setStepFormValues] = useState({});
+  const [newFormValues, setNewFormValues] = useState({});
   const actionRef = useRef();
   const columns = [
     {
@@ -212,7 +220,6 @@ const TableList = () => {
             onClick={() => {
               setStepFormValues(record);
               handleModalVisible(true);
-              console.log(record)
             }}
           >
             编辑
@@ -220,8 +227,18 @@ const TableList = () => {
           <Divider type="vertical" />
           <a
             onClick={() => {
-              // handleUpdateModalVisible(true);
-              setStepFormValues(record);
+              Modal.confirm({
+                title: '确定删除该账号吗？',
+                content: '账号删除后无法恢复...',
+                icon: <ExclamationCircleOutlined />,
+                okType: 'danger',
+                onOk: async () => {
+                  await handleRemove(record.id);
+                  if (actionRef.current) {
+                    actionRef.current.reload();
+                  }
+                },
+              });
             }}
           >
             删除
@@ -238,30 +255,23 @@ const TableList = () => {
         rowKey="id"
         bordered
         toolBarRender={(action, { selectedRows }) => [
-          <Button type="primary" onClick={() => handleModalVisible(true)}>
+          <Button type="primary" onClick={() => handleUpdateModalVisible(true)}>
             <PlusOutlined /> 新建
-          </Button>,
-          <Button
-            type="primary"
-            onClick={() => {
-              handleUpdateModalVisible(true);
-            }}
-          >
-            <PlusOutlined /> NEW
           </Button>,
           selectedRows && selectedRows.length > 0 && (
             <Dropdown
               overlay={
                 <Menu
                   onClick={async (e) => {
-                    if (e.key === 'remove') {
-                      await handleRemove(selectedRows);
-                      action.reload();
+                    if (e.key === 'removeSelect') {
+                      message.error('批量删除');
+                      // await handleRemove(selectedRows);
+                      // action.reload();
                     }
                   }}
                   selectedKeys={[]}
                 >
-                  <Menu.Item key="remove">批量删除</Menu.Item>
+                  <Menu.Item key="removeSelect">批量删除</Menu.Item>
                 </Menu>
               }
             >
@@ -271,7 +281,7 @@ const TableList = () => {
             </Dropdown>
           ),
         ]}
-        tableAlertRender={({ selectedRowKeys, selectedRows }) => (
+        tableAlertRender= {({ selectedRowKeys }) => selectedRowKeys.length > 0 ? (
           <div>
             已选择{' '}
             <a
@@ -286,7 +296,7 @@ const TableList = () => {
               服务调用次数总计 {selectedRows.reduce((pre, item) => pre + item.callNo, 0)} 万
             </span> */}
           </div>
-        )}
+        ): false}
         request={(params, sorter, filter) => queryRule({ ...params, sorter, filter })}
         columns={columns}
         rowSelection={{}}
@@ -314,7 +324,7 @@ const TableList = () => {
       ) : null}
       <UpdateForm
         onSubmit={async (value) => {
-          const success = await handleUpdate(value);
+          const success = await handleAdd(value);
 
           if (success) {
             handleUpdateModalVisible(false);
@@ -327,10 +337,10 @@ const TableList = () => {
         }}
         onCancel={() => {
           handleUpdateModalVisible(false);
-          setStepFormValues({});
+          setNewFormValues({});
         }}
         updateModalVisible={updateModalVisible}
-        // values={stepFormValues}
+        values={newFormValues}
       />
     </PageHeaderWrapper>
   );

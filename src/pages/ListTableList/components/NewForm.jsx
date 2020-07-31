@@ -25,7 +25,7 @@ const NewForm = (props) => {
     expect_price: values.expect_price,
     usage_rate: values.usage_rate,
     fans_num: values.fans_num,
-    issues_num: values.issues_num    
+    issues_num: values.issues_num,
   });
 
   const handleNext = async () => {
@@ -44,17 +44,17 @@ const NewForm = (props) => {
             }}
             placeholder="请选择平台"
           >
-            <Option value="1">抖音</Option>
-            <Option value="2">微博</Option>
-            <Option value="3">微信</Option>
-            <Option value="4">快手</Option>
-            <Option value="5">今日头条</Option>
-            <Option value="6">西瓜视频</Option>
-            <Option value="7">火山小视频</Option>
-            <Option value="8">腾讯微视</Option>
-            <Option value="9">斗鱼</Option>
-            <Option value="10">虎牙</Option>
-            <Option value="11">小红书</Option>
+            <Option value={1}>抖音</Option>
+            <Option value={2}>微博</Option>
+            <Option value={3}>微信</Option>
+            <Option value={4}>快手</Option>
+            <Option value={5}>今日头条</Option>
+            <Option value={6}>西瓜视频</Option>
+            <Option value={7}>火山小视频</Option>
+            <Option value={8}>腾讯微视</Option>
+            <Option value={9}>斗鱼</Option>
+            <Option value={10}>虎牙</Option>
+            <Option value={11}>小红书</Option>
           </Select>
         </FormItem>
         <FormItem name="account_name" label="账号昵称">
@@ -78,12 +78,12 @@ const NewForm = (props) => {
             }}
             placeholder="请选择账号使用频率"
           >
-            <Option value="1">2小时以下</Option>
-            <Option value="2">2-5小时</Option>
-            <Option value="3">5-8小时</Option>
-            <Option value="4">8-11小时</Option>
-            <Option value="5">11-14小时</Option>
-            <Option value="6">14小时以上</Option>
+            <Option value={1}>2小时以下</Option>
+            <Option value={2}>2-5小时</Option>
+            <Option value={3}>5-8小时</Option>
+            <Option value={4}>8-11小时</Option>
+            <Option value={5}>11-14小时</Option>
+            <Option value={6}>14小时以上</Option>
           </Select>
         </FormItem>
         <FormItem name="fans_num" label="粉丝数">
@@ -129,7 +129,11 @@ const NewForm = (props) => {
       footer={renderFooter()}
       onCancel={() => handlemodalVisible()}
     >
-      <Form {...formLayout} form={form} initialValues={formVals}>
+      <Form
+        {...formLayout}
+        form={form}
+        initialValues={formVals}
+      >
         {renderContent()}
       </Form>
     </Modal>
