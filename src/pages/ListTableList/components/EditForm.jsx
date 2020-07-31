@@ -13,11 +13,11 @@ const formLayout = {
   },
 };
 
-const NewForm = (props) => {
+const EditForm = (props) => {
   const [form] = Form.useForm();
   const { onSubmit: handleSubmit, onCancel: handlemodalVisible, modalVisible, values } = props;
 
-  const [formVals, setFormVals] = useState({
+  const [formVals] = useState({
     id: values.id,
     platform: values.platform,
     account_name: values.account_name,
@@ -27,12 +27,6 @@ const NewForm = (props) => {
     fans_num: values.fans_num,
     issues_num: values.issues_num,
   });
-
-  const handleNext = async () => {
-    const fieldsValue = await form.validateFields();
-    // setFormVals({ ...formVals, ...fieldsValue });
-    handleSubmit({ ...formVals, ...fieldsValue });
-  };
 
   const renderContent = () => {
     return (
@@ -110,7 +104,13 @@ const NewForm = (props) => {
     return (
       <>
         <Button onClick={() => form.resetFields()}>重置</Button>
-        <Button type="primary" onClick={() => handleNext()}>
+        <Button
+          type="primary"
+          onClick={async () => {
+            const fieldsValue = await form.validateFields();
+            handleSubmit({ ...formVals, ...fieldsValue });
+          }}
+        >
           提交
         </Button>
       </>
@@ -129,15 +129,11 @@ const NewForm = (props) => {
       footer={renderFooter()}
       onCancel={() => handlemodalVisible()}
     >
-      <Form
-        {...formLayout}
-        form={form}
-        initialValues={formVals}
-      >
+      <Form {...formLayout} form={form} initialValues={formVals}>
         {renderContent()}
       </Form>
     </Modal>
   );
 };
 
-export default NewForm;
+export default EditForm;

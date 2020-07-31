@@ -1,15 +1,14 @@
 import { DownOutlined, PlusOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
-import { Button, Divider, Dropdown, Menu, message, Input, Modal } from 'antd';
+import { Button, Divider, Dropdown, Menu, message, Modal, Descriptions, Switch } from 'antd';
 import React, { useState, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
 import CreateForm from './components/CreateForm';
-import UpdateForm from './components/UpdateForm';
-import { queryRule, updateRule, addRule, removeRule } from './service';
+import { queryAccount, updateAccount, addAccount, delAccount } from './service';
 import PlatformTag from './components/PlatformTag';
-import NewForm from './components/NewForm';
+import EditForm from './components/EditForm';
 /**
- * 添加节点
+ * 添加账号
  * @param fields
  */
 
@@ -17,7 +16,7 @@ const handleAdd = async (fields) => {
   const hide = message.loading('正在添加');
 
   try {
-    await addRule({ ...fields });
+    await addAccount({ ...fields });
     hide();
     message.success('添加成功');
     return true;
@@ -28,7 +27,7 @@ const handleAdd = async (fields) => {
   }
 };
 /**
- * 更新节点
+ * 更新账号
  * @param fields
  */
 
@@ -36,7 +35,7 @@ const handleUpdate = async (fields) => {
   const hide = message.loading('提交中');
 
   try {
-    await updateRule({ ...fields });
+    await updateAccount({ ...fields });
     hide();
     message.success('账号修改成功');
     return true;
@@ -47,32 +46,15 @@ const handleUpdate = async (fields) => {
   }
 };
 /**
- *  删除节点
+ *  删除账号
  * @param selectedRows
  */
-
-// const handleRemove = async (selectedRows) => {
-//   const hide = message.loading('正在删除');
-//   if (!selectedRows) return true;
-
-//   try {
-//     await removeRule({
-//       id: selectedRows.map((row) => row.id),
-//     });
-//     hide();
-//     message.success('删除成功，即将刷新');
-//     return true;
-//   } catch (error) {
-//     hide();
-//     message.error('删除失败，请重试');
-//     return false;
-//   }
-// };
 const handleRemove = async (id) => {
   const hide = message.loading('正在删除');
+
   if (!id) return true;
   try {
-    await removeRule({
+    await delAccount({
       id,
     });
     hide();
@@ -89,7 +71,7 @@ const TableList = () => {
   const [createModalVisible, handleModalVisible] = useState(false);
   const [updateModalVisible, handleUpdateModalVisible] = useState(false);
   const [stepFormValues, setStepFormValues] = useState({});
-  const [newFormValues, setNewFormValues] = useState({});
+  const [editFormValues, setEditFormValues] = useState({});
   const actionRef = useRef();
   const columns = [
     {
@@ -139,11 +121,13 @@ const TableList = () => {
     {
       title: '昵称',
       dataIndex: 'account_name',
+      hideInSearch: true,
       align: 'center',
     },
     {
       title: '账号ID',
       dataIndex: 'account_id',
+      hideInSearch: true,
       responsive: ['md'],
       render: (text) => (
         <div style={{ wordWrap: 'break-word', wordBreak: 'break-word' }}>{text}</div>
@@ -247,10 +231,22 @@ const TableList = () => {
       ),
     },
   ];
+const onChange=(e)=>{
+  console.log(e);
+}
+  
+const content = (
+  <div>
+  粉丝模式 
+  <Switch defaultChecked onChange={onChange} />
+  </div>
+);
   return (
-    <PageHeaderWrapper>
+    <>
+      {/* <Switch defaultChecked onChange={onChange} /> */}
       <ProTable
-        headerTitle="查询表格"
+        // headerTitle={content}
+        headerTitle="我的账号"
         actionRef={actionRef}
         rowKey="id"
         bordered
@@ -266,7 +262,7 @@ const TableList = () => {
                     if (e.key === 'removeSelect') {
                       message.error('批量删除');
                       // await handleRemove(selectedRows);
-                      // action.reload();
+                      action.reload();
                     }
                   }}
                   selectedKeys={[]}
@@ -297,14 +293,13 @@ const TableList = () => {
             </span> */}
           </div>
         ): false}
-        request={(params, sorter, filter) => queryRule({ ...params, sorter, filter })}
+        request={(params) => queryAccount({ ...params })}
         columns={columns}
         rowSelection={{}}
       />
       {stepFormValues && Object.keys(stepFormValues).length ? (
-        <NewForm
+        <EditForm
           onSubmit={async (value) => {
-            console.log(value);
             const success = await handleUpdate(value);
             if (success) {
               handleModalVisible(false);
@@ -322,13 +317,13 @@ const TableList = () => {
           values={stepFormValues}
         />
       ) : null}
-      <UpdateForm
+      <CreateForm
         onSubmit={async (value) => {
           const success = await handleAdd(value);
 
           if (success) {
             handleUpdateModalVisible(false);
-            setStepFormValues({});
+            setEditFormValues({});
 
             if (actionRef.current) {
               actionRef.current.reload();
@@ -337,12 +332,12 @@ const TableList = () => {
         }}
         onCancel={() => {
           handleUpdateModalVisible(false);
-          setNewFormValues({});
+          setEditFormValues({});
         }}
         updateModalVisible={updateModalVisible}
-        values={newFormValues}
+        values={editFormValues}
       />
-    </PageHeaderWrapper>
+    </>
   );
 };
 

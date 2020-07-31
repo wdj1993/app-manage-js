@@ -10,6 +10,7 @@ import HuoshanSvg from '@/assets/platforms/huoshan.svg';
 import HuyaSvg from '@/assets/platforms/huya.svg';
 import DouyuSvg from '@/assets/platforms/douyu.svg';
 import XiguaSvg from '@/assets/platforms/xigua.svg';
+import { Tooltip } from 'antd';
 
 const PlatformTag = (props) => {
   const { platform } = props;
@@ -63,6 +64,7 @@ const PlatformTag = (props) => {
   const renderIcon = () => {
     return (
       <>
+      <Tooltip placement="right" title={plats[platform].text} color="cyan">
         <img
           src= {plats[platform].icon}
           style={{
@@ -70,8 +72,8 @@ const PlatformTag = (props) => {
             height: 25,
           }}
           alt={plats[platform].text}
-          title={plats[platform].text}
         />
+        </Tooltip>
       </>
     );
   };

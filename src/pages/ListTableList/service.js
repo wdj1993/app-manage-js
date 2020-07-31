@@ -1,25 +1,25 @@
 import request from '@/utils/request';
 import sign from '@/utils/sign';
 
-export async function queryRule(params) {
+export async function queryAccount(params) {
   return request('/api/getMyAccount.json', {
     method: 'POST',
     data: sign(params)
   });
 }
-export async function removeRule(params) {
+export async function delAccount(params) {
   return request('/api/delAccount.json', {
     method: 'POST',
     data: sign(params)
   });
 }
-export async function addRule(params) {
+export async function addAccount(params) {
   return request('/api/addAccount.json', {
     method: 'POST',
     data: sign(params)
   });
 }
-export async function updateRule(params) {
+export async function updateAccount(params) {
   return request('/api/editAccount.json', {
     method: 'POST',
     data: sign(params)
