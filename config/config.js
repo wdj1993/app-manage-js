@@ -121,6 +121,12 @@ export default defineConfig({
               component: './Home',
             },
             {
+              name: 'dashboard.analysis',
+              icon: 'smile',
+              path: '/dashboardanalysis',
+              component: './DashboardAnalysis',
+            },
+            {
               component: './404',
             },
           ],
