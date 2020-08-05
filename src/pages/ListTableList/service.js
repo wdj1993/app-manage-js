@@ -25,3 +25,9 @@ export async function updateAccount(params) {
     data: sign(params)
   });
 }
+export async function switchMode(params) {
+  return request('/api/openFansModel.json', {
+    method: 'POST',
+    data: sign(params)
+  });
+}

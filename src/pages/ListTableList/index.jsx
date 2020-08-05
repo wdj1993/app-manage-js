@@ -1,12 +1,15 @@
 import { DownOutlined, PlusOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
-import { Button, Divider, Dropdown, Menu, message, Modal, Descriptions, Switch } from 'antd';
+import { Button, Divider, Dropdown, Menu, message, Modal, Switch } from 'antd';
 import React, { useState, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
+import { connect } from 'umi';
 import CreateForm from './components/CreateForm';
-import { queryAccount, updateAccount, addAccount, delAccount } from './service';
+import { queryAccount, updateAccount, addAccount, delAccount, switchMode } from './service';
 import PlatformTag from './components/PlatformTag';
 import EditForm from './components/EditForm';
+import styles from './style.less';
+
 /**
  * 添加账号
  * @param fields
@@ -67,11 +70,34 @@ const handleRemove = async (id) => {
   }
 };
 
-const TableList = () => {
+/**
+ *  粉丝模式切换
+ * @param type:1-开启 2-关闭
+ */
+const changeFansMode = async (type) => {
+  const hide = message.loading('切换中');
+  if (!type) return true;
+  try {
+    await switchMode({
+      type,
+    });
+    hide();
+    message.success(type === 1 ? '粉丝模式已开启' : '粉丝模式已关闭');    
+    return true;
+  } catch (error) {
+    hide();
+    message.error('切换失败，请重试');
+    return false;
+  }
+};
+
+const TableList = (props) => {
+  console.log(props);
   const [createModalVisible, handleModalVisible] = useState(false);
   const [updateModalVisible, handleUpdateModalVisible] = useState(false);
   const [stepFormValues, setStepFormValues] = useState({});
   const [editFormValues, setEditFormValues] = useState({});
+  const [fansMode, setFansMode] = useState(props.currentUser.fans_mode===1);
   const actionRef = useRef();
   const columns = [
     {
@@ -231,19 +257,44 @@ const TableList = () => {
       ),
     },
   ];
-const onChange=(e)=>{
-  console.log(e);
-}
-  
-const content = (
-  <div>
-  粉丝模式 
-  <Switch defaultChecked onChange={onChange} />
-  </div>
-);
+  const onChange = (e) => {
+    const type = e ? 1 : 2;
+    Modal.confirm({
+      title: e ? '确定开启粉丝模式吗？' : '确定关闭粉丝模式吗？',
+      content: e
+        ? '切换为粉丝模式后，您的所有账号将成为粉丝账号...'
+        : '关闭粉丝模式后，您的账号将无法【领取】新的增粉任务...',
+      icon: <ExclamationCircleOutlined />,
+      okType: e ? 'default' : 'danger',
+      onOk: async () => {
+        await changeFansMode(type);
+        setFansMode(e);
+
+      },
+    });
+  };
+
+  const content = (
+    <div className={styles.pageHeaderContent}>
+      <p>发布或领取增粉任务前须添加对应平台账号，发布任务还必须开启粉丝模式。</p>
+      <p>
+        当前粉丝模式：
+        <Switch checked={fansMode} onChange={onChange} />{' '}
+        {fansMode ? '已开启' : '已关闭'}
+      </p>
+    </div>
+  );
+  const extraContent = (
+    <div className={styles.extraImg}>
+      <img
+        alt="粉丝账号"
+        src="https://gw.alipayobjects.com/zos/rmsportal/RzwpdLnhmvDJToTdfDPe.png"
+      />
+    </div>
+  );
+
   return (
-    <>
-      {/* <Switch defaultChecked onChange={onChange} /> */}
+    <PageHeaderWrapper content={content} extraContent={extraContent}>
       <ProTable
         // headerTitle={content}
         headerTitle="我的账号"
@@ -277,22 +328,26 @@ const content = (
             </Dropdown>
           ),
         ]}
-        tableAlertRender= {({ selectedRowKeys }) => selectedRowKeys.length > 0 ? (
-          <div>
-            已选择{' '}
-            <a
-              style={{
-                fontWeight: 600,
-              }}
-            >
-              {selectedRowKeys.length}
-            </a>{' '}
-            项&nbsp;&nbsp;
-            {/* <span>
+        tableAlertRender={({ selectedRowKeys }) =>
+          selectedRowKeys.length > 0 ? (
+            <div>
+              已选择{' '}
+              <a
+                style={{
+                  fontWeight: 600,
+                }}
+              >
+                {selectedRowKeys.length}
+              </a>{' '}
+              项&nbsp;&nbsp;
+              {/* <span>
               服务调用次数总计 {selectedRows.reduce((pre, item) => pre + item.callNo, 0)} 万
             </span> */}
-          </div>
-        ): false}
+            </div>
+          ) : (
+            false
+          )
+        }
         request={(params) => queryAccount({ ...params })}
         columns={columns}
         rowSelection={{}}
@@ -337,8 +392,10 @@ const content = (
         updateModalVisible={updateModalVisible}
         values={editFormValues}
       />
-    </>
+    </PageHeaderWrapper>
   );
 };
 
-export default TableList;
+export default connect(({ user }) => ({
+  currentUser: user.currentUser,
+}))(TableList);

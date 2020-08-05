@@ -6,6 +6,7 @@ export async function query() {
   return request('/api/users');
 }
 export async function queryCurrent() {
+  console.log("=======userInfo========");
   // return request('/api/currentUser');
   return request('/api/myInfo.json', {
     method: 'POST',

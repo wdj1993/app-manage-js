@@ -79,6 +79,7 @@ const BasicLayout = props => {
 
   useEffect(() => {
     if (dispatch) {
+      console.log("---->获取用户信息<----")
       dispatch({
         type: 'user/fetchCurrent',
       });

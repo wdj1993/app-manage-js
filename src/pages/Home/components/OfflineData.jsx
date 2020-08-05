@@ -64,8 +64,8 @@ const OfflineData = ({ activeKey, loading, offlineData, offlineChartData, handle
               height={400}
               data={offlineChartData}
               titleMap={{
-                y1: 'dashboardanalysis.analysis.traffic',
-                y2: 'dashboardanalysis.analysis.payments',
+                y1: '粉丝总数',
+                y2: '新增粉丝',
               }}
             />
           </div>

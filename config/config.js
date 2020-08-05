@@ -103,6 +103,12 @@ export default defineConfig({
               component: './ListBasicList',
             },
             {
+              name: 'list.card-list',
+              icon: 'smile',
+              path: '/listcardlist',
+              component: './ListCardList',
+            },
+            {
               name: 'list.table-list',
               icon: 'table',
               path: '/list',

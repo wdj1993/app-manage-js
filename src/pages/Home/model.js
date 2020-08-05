@@ -52,9 +52,13 @@ const Model = {
         payload: {
           salesData: response.salesData,
           salesTypeData: response.salesTypeData,
+          salesTypeDataOnline: response.salesTypeDataOnline,
+          salesTypeDataOffline: response.salesTypeDataOffline,
           searchData: response.searchData,
           visitData: response.visitData,
           visitData2: response.visitData,
+          offlineData: response.offlineData,
+          offlineChartData: response.offlineChartData
         },
       });
     },

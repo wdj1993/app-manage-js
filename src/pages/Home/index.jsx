@@ -3,11 +3,17 @@ import React, { Component, Suspense } from 'react';
 import { Link, connect } from 'umi';
 import { PageHeaderWrapper, PageLoading } from '@ant-design/pro-layout';
 import moment from 'moment';
-import { EllipsisOutlined, LikeTwoTone, LikeOutlined, StarOutlined, MessageOutlined } from '@ant-design/icons';
+import {
+  EllipsisOutlined,
+  LikeTwoTone,
+  LikeOutlined,
+  StarOutlined,
+  MessageOutlined,
+} from '@ant-design/icons';
 import Radar from './components/Radar';
 import EditableLinkGroup from './components/EditableLinkGroup';
 import styles from './style.less';
-import { getTimeDistance } from '../DashboardAnalysis/utils/utils';
+import { getTimeDistance } from './utils/utils';
 import ArticleListContent from './components/ArticleListContent';
 
 const IntroduceRow = React.lazy(() => import('./components/IntroduceRow'));
@@ -121,30 +127,35 @@ const IconText = ({ type, text }) => {
 };
 
 const IconPraise = ({ text, value, index }) => {
-      return value === 1 ? (
-        <span style={{ color: '#FF5722' }} onClick={() => {
-          console.log('点赞');
-        }}>
-          <LikeTwoTone
-            twoToneColor="#FF5722"
-            style={{
-              marginRight: 8,
-            }}
-          />
-          {text}
-        </span>
-      ) : (
-        <span onClick={() => {
-          console.log("d111");
-        }}>
-          <LikeOutlined
-            style={{
-              marginRight: 8,
-            }}
-          />
-          {text}
-        </span>
-      );
+  return value === 1 ? (
+    <span
+      style={{ color: '#FF5722' }}
+      onClick={() => {
+        console.log('点赞');
+      }}
+    >
+      <LikeTwoTone
+        twoToneColor="#FF5722"
+        style={{
+          marginRight: 8,
+        }}
+      />
+      {text}
+    </span>
+  ) : (
+    <span
+      onClick={() => {
+        console.log('d111');
+      }}
+    >
+      <LikeOutlined
+        style={{
+          marginRight: 8,
+        }}
+      />
+      {text}
+    </span>
+  );
 };
 
 class Home extends Component {
@@ -168,19 +179,19 @@ class Home extends Component {
     });
   }
 
-  handleChangeSalesType = e => {
+  handleChangeSalesType = (e) => {
     this.setState({
       salesType: e.target.value,
     });
   };
 
-  handleTabChange = key => {
+  handleTabChange = (key) => {
     this.setState({
       currentTabKey: key,
     });
   };
 
-  renderActivities = (item,index) => {
+  renderActivities = (item, index) => {
     // const events = item.template.split(/@\{([^{}]*)\}/gi).map((key) => {
     //   if (item[key]) {
     //     return (
@@ -194,37 +205,37 @@ class Home extends Component {
     // });
     return (
       <List.Item
-              key={item.id}
-              actions={[
-                <IconText key="star" type="star-o" text={item.star} />,
-                <IconText key="message" type="message" text={item.comment} />,
-                <IconPraise key="like" text={item.praise} value={item.is_praise} index = {index}/>,
-              ]}
-              extra={<div className={styles.listItemExtra} />}
-            >
-              <List.Item.Meta
-                avatar={<Avatar src={item.headimg} size={50} />}
-                title={
-                  <div className={styles.listUserInfo}>
-                    <a className={styles.listItemMetaTitle} href={item.href}>
-                      {item.nickname}
-                    </a>
-                    <em>{moment(item.add_time_int * 1000).format('YYYY-MM-DD HH:mm')}</em>
-                  </div>
-                }
-                description={
-                  <span>
-                    <Tag color="blue" visible={item.direct_editingAuth === 1}>
-                      小编认证
-                    </Tag>
-                    <Tag color="orange" visible={item.salerAuth === 1}>
-                      企业认证
-                    </Tag>
-                  </span>
-                }
-              />
-              <ArticleListContent data={item} />
-            </List.Item>
+        key={item.id}
+        actions={[
+          <IconText key="star" type="star-o" text={item.star} />,
+          <IconText key="message" type="message" text={item.comment} />,
+          <IconPraise key="like" text={item.praise} value={item.is_praise} index={index} />,
+        ]}
+        extra={<div className={styles.listItemExtra} />}
+      >
+        <List.Item.Meta
+          avatar={<Avatar src={item.headimg} size={50} />}
+          title={
+            <div className={styles.listUserInfo}>
+              <a className={styles.listItemMetaTitle} href={item.href}>
+                {item.nickname}
+              </a>
+              <em>{moment(item.add_time_int * 1000).format('YYYY-MM-DD HH:mm')}</em>
+            </div>
+          }
+          description={
+            <span>
+              <Tag color="blue" visible={item.direct_editingAuth === 1}>
+                小编认证
+              </Tag>
+              <Tag color="orange" visible={item.salerAuth === 1}>
+                企业认证
+              </Tag>
+            </span>
+          }
+        />
+        <ArticleListContent data={item} />
+      </List.Item>
       // <List.Item key={item.id}>
       //   <List.Item.Meta
       //     avatar={<Avatar src={item.user.avatar} />}
@@ -244,7 +255,6 @@ class Home extends Component {
       // </List.Item>
     );
   };
-  
 
   render() {
     const { rangePickerValue, salesType, currentTabKey } = this.state;
@@ -296,7 +306,6 @@ class Home extends Component {
     );
 
     const activeKey = currentTabKey || (offlineData[0] && offlineData[0].name);
-
     return (
       <PageHeaderWrapper
         content={<PageHeaderContent currentUser={currentUser} />}
@@ -304,7 +313,8 @@ class Home extends Component {
       >
         <Suspense fallback={<PageLoading />}>
           <IntroduceRow loading={loading} visitData={visitData} />
-        </Suspense>
+        </Suspense>        
+
         {/* <Suspense fallback={null}>
           <SalesCard
               rangePickerValue={rangePickerValue}
@@ -359,7 +369,7 @@ class Home extends Component {
                 </Card.Grid>
               ))}
             </Card>
-            <Card
+            {/* <Card
               bodyStyle={{
                 padding: 0,
               }}
@@ -371,12 +381,12 @@ class Home extends Component {
               <List
                 loading={activitiesLoading}
                 itemLayout="vertical"
-                renderItem={(item,index) => this.renderActivities(item,index)}
+                renderItem={(item, index) => this.renderActivities(item, index)}
                 dataSource={activities}
                 className={styles.activitiesList}
                 size="large"
               />
-            </Card>
+            </Card> */}
           </Col>
           <Col xl={8} lg={24} md={24} sm={24} xs={24}>
             <Card
@@ -456,14 +466,14 @@ class Home extends Component {
           </Col>
         </Row>
         <Suspense fallback={null}>
-            <OfflineData
-              activeKey={activeKey}
-              // loading={loading}
-              offlineData={offlineData}
-              offlineChartData={offlineChartData}
-              handleTabChange={this.handleTabChange}
-            />
-          </Suspense>
+          <OfflineData
+            activeKey={activeKey}
+            loading={loading}
+            offlineData={offlineData}
+            offlineChartData={offlineChartData}
+            handleTabChange={this.handleTabChange}
+          />
+        </Suspense>
       </PageHeaderWrapper>
     );
   }
